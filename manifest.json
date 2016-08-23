@@ -1,0 +1,23 @@
+{
+  "name": "Shiny",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Shiny监视",
+  "icons": {
+    "48": "assets/image/Shiny.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "打开设置"
+  },
+  "background": {
+    "page": "background.html"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications",
+    "http://*/*",
+    "https://*/*"
+  ]
+}
