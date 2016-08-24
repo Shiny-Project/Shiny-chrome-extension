@@ -118,11 +118,18 @@ $(document).ready(function () {
         },
         ready: function () {
             var self = this;
-            ["block", "star", "eventsHistory"].forEach(function (v) {
+            ["block", "star"].forEach(function (v) {
                 getList(v).then(function (data) {
-                    self[v] = data;
+                    data.forEach((item) => {
+                        self[v].push({
+                            name: item
+                        })
+                    })
                 });
             });
+            getList('eventsHistory').then(function(data){
+                self['eventsHistory'] = data
+            })
         },
         methods: {
             removeSpiderFromBlockList: function (index) {
