@@ -1,8 +1,8 @@
 <!doctype html>
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="assets/css/mdl.css">
@@ -12,63 +12,79 @@
     <script src="assets/js/config.js"></script>
     <title>Shiny接收端设置页</title>
 </head>
+
 <body>
-<div id="app">
-    <div class="mdl-grid">
-        <div class="mdl-cell mdl-cell--1-col"></div>
-        <div class="mdl-cell mdl-cell--10-col">
-            <h3>黑名单管理</h3>
-            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                <thead>
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Spider</th>
-                    <th>删除</th>
-                </tr>
-                </thead>
-                <tbody v-for="spider in block">
-                    <tr>
-                        <td>{{spider.name}}</td>
-                        <td>
-                            <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-                                    v-on:click="removeSpiderFromBlockList($index)">
+    <div id="app">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--1-col"></div>
+            <div class="mdl-cell mdl-cell--10-col">
+                <h3>黑名单管理</h3>
+                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Spider</th>
+                            <th>删除</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="spider in block">
+                        <tr>
+                            <td>{{spider.name}}</td>
+                            <td>
+                                <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" v-on:click="removeSpiderFromBlockList($index)">
                                 <i class="material-icons">close</i>
                             </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <h3>关注名单管理</h3>
-            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                <thead>
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Spider</th>
-                    <th>删除</th>
-                </tr>
-                </thead>
-                <tbody v-for="spider in star">
-                <tr>
-                    <td>{{spider.name}}</td>
-                    <td>
-                        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-                                v-on:click="removeSpiderFromStarList($index)">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>关注名单管理</h3>
+                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Spider</th>
+                            <th>删除</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="spider in star">
+                        <tr>
+                            <td>{{spider.name}}</td>
+                            <td>
+                                <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" v-on:click="removeSpiderFromStarList($index)">
                             <i class="material-icons">close</i>
                         </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>历史消息(非实时)</h3>
+                <div v-for="event in eventsHistory" transition="fade">
+                    <div class="mdl-card mdl-shadow--2dp" style="width: 100%;">
+                        <div class="mdl-card__title">
+                            <h2 class="mdl-card__title-text">
+                                <a href="{{ event.link }}" target="_blank">{{{ event.title }}}</a>
+                                <h4 class="mdl-card__subtitle-text">{{ event.spiderName }} # {{ event.hash }} : {{ event.level }}</h4>
+                            </h2>
+                        </div>
+                        <div class="mdl-card__supporting-text">
+                            {{{ event.content }}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mdl-cell mdl-cell--1-col"></div>
         </div>
-        <div class="mdl-cell mdl-cell--1-col"></div>
     </div>
-</div>
 </body>
 <style>
     .fade-transition {
         transition: all .3s ease;
     }
-
-    .fade-enter, .fade-leave {
+    
+    .fade-enter,
+    .fade-leave {
         opacity: 0;
     }
 </style>
+
 </html>

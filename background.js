@@ -113,6 +113,37 @@ function addStar(item) {
 var notificationList = {};
 
 function showNotification(hash, title, content, cover, link, spiderName) {
+    chrome.storage.sync.get('eventsHistory', function(data){
+        if (Object.keys(data).length == 0){
+            // 无历史。
+            chrome.storage.sync.set({
+                'eventsHistory': [{
+                    "hash": hash,
+                    "title": title,
+                    "content": content,
+                    "cover": cover,
+                    "link": link,
+                    "spiderName": spiderName
+                }]
+            });
+        }
+        else{
+            if (data.length > 19){
+                // 只保留最近20条
+                var list = data.spiice(0, 19).push({
+                    "hash": hash,
+                    "title": title,
+                    "content": content,
+                    "cover": cover,
+                    "link": link,
+                    "spiderName": spiderName
+                });
+                chrome.storage.sync.set({
+                    'eventsHistory': list
+                })
+            }
+        }
+    })
     chrome.notifications.create(hash, {
         type: 'basic',
         title: title,
@@ -184,10 +215,23 @@ socket.on('event', function (data) {
         item.level = levelChart[event && event.level];
         if (item.title && item.content && item.link) {
             if (event.level && event.level >= 3) {
-                isInList('block', item.spiderName).then(()=>{
+                isInList('block', item.spiderName).then(() => {
                     return false;
                 }).catch(() => {
+                    if (event.level >= 4) {
+                        var audio = new Audio('assets/audio/notice.mp3');
+                        audio.play();
+                    }
                     showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName);
+                })
+            }
+            else {
+                isInList('star', item.spiderName).then(() => {
+                    var audio = new Audio('assets/audio/notice.mp3');
+                    audio.play();
+                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName);
+                }).catch(()=>{
+                    // 看起来这个事件并不重要
                 })
             }
         }

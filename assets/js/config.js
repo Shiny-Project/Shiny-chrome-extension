@@ -113,17 +113,14 @@ $(document).ready(function () {
         el: '#app',
         data: {
             block: [],
-            star: []
+            star: [],
+            eventsHistory: []
         },
         ready: function () {
             var self = this;
-            ["block", "star"].forEach(function (v) {
+            ["block", "star", "eventsHistory"].forEach(function (v) {
                 getList(v).then(function (data) {
-                    data.forEach(function (spiderName) {
-                        self[v].push({
-                            name: spiderName
-                        });
-                    });
+                    self[v] = data;
                 });
             });
         },
