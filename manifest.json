@@ -1,6 +1,7 @@
 {
   "name": "Shiny",
   "version": "1.2",
+  "author": "Eridanus Sora",
   "manifest_version": 2,
   "description": "Shiny监视",
   "icons": {
@@ -11,7 +12,8 @@
     "default_title": "打开设置"
   },
   "background": {
-    "page": "background.html"
+    "page": "background.html",
+    "persistent": true
   },
   "permissions": [
     "tabs",

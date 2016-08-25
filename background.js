@@ -113,37 +113,6 @@ function addStar(item) {
 var notificationList = {};
 
 function showNotification(hash, title, content, cover, link, spiderName) {
-    chrome.storage.sync.get('eventsHistory', function(data){
-        if (Object.keys(data).length == 0){
-            // 无历史。
-            chrome.storage.sync.set({
-                'eventsHistory': [{
-                    "hash": hash,
-                    "title": title,
-                    "content": content,
-                    "cover": cover,
-                    "link": link,
-                    "spiderName": spiderName
-                }]
-            });
-        }
-        else{
-            if (data.length > 19){
-                // 只保留最近20条
-                var list = data.spiice(0, 19).push({
-                    "hash": hash,
-                    "title": title,
-                    "content": content,
-                    "cover": cover,
-                    "link": link,
-                    "spiderName": spiderName
-                });
-                chrome.storage.sync.set({
-                    'eventsHistory': list
-                })
-            }
-        }
-    })
     chrome.notifications.create(hash, {
         type: 'basic',
         title: title,
@@ -152,8 +121,8 @@ function showNotification(hash, title, content, cover, link, spiderName) {
         buttons: [{
             title: '屏蔽此来源'
         }, {
-                title: '特别关注此来源'
-            }
+            title: '特别关注此来源'
+        }
         ]
     }, function (id) {
         notificationList[id] = {
@@ -177,6 +146,7 @@ chrome.notifications.onClosed.addListener(function (id) {
     }
 });
 
+// 通知按钮事件监听
 chrome.notifications.onButtonClicked.addListener(function (id, index) {
     var res = {
         0: addBlock,
@@ -188,6 +158,16 @@ chrome.notifications.onButtonClicked.addListener(function (id, index) {
             1: '特别关注'
         }[index] + '列表'
     })
+});
+
+// 更新或安装时的提示
+chrome.runtime.onInstalled.addListener(function (details) {
+    if (details.reason == "install") {
+        showNotification('Shiny', 'Shiny已安装~', '现在您可以收到来自Shiny的推送通知。', '', 'http://api.kotori.moe:1337', 'Shiny')
+    } else if (details.reason == "update") {
+        var thisVersion = chrome.runtime.getManifest().version;
+        showNotification('Shiny', 'Shiny已更新至' + thisVersion + '~', '现在您可以收到来自Shiny的推送通知。', '', 'http://api.kotori.moe:1337', 'Shiny')
+    }
 });
 
 // 连接Websocket
@@ -213,25 +193,62 @@ socket.on('event', function (data) {
         });
 
         item.level = levelChart[event && event.level];
+
+        // 记录到历史中
+
+        var history = {
+            "hash": item.hash,
+            "title": item.title,
+            "content": item.content,
+            "cover": item.cover,
+            "link": item.link,
+            "spiderName": item.spiderName
+        };
+        chrome.storage.sync.get('eventsHistory', function (data) {
+            if (Object.keys(data).length == 0) {
+                // 无历史。
+                chrome.storage.sync.set({
+                    'eventsHistory': [history]
+                });
+            }
+            else {
+                if (data.length > 19) {
+                    // 只保留最近20条
+                    chrome.storage.sync.set({
+                        'eventsHistory': data.spiice(0, 19).push(history)
+                    });
+                }
+                else {
+                    var list = data.push(history);
+                    chrome.storage.sync.set({
+                        'eventsHistory': list
+                    })
+                }
+            }
+        });
+
+
         if (item.title && item.content && item.link) {
             if (event.level && event.level >= 3) {
                 isInList('block', item.spiderName).then(() => {
+                    // 被屏蔽的来源
                     return false;
                 }).catch(() => {
-                    if (event.level >= 4) {
-                        var audio = new Audio('assets/audio/notice.mp3');
-                        audio.play();
+                    if (event.level == 4) {
+                        new Audio('assets/audio/notice.mp3').play();
+                    }
+                    if (event.level == 5) {
+                        new Audio('assets/audio/notice-high.mp3').play();
                     }
                     showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName);
                 })
             }
             else {
                 isInList('star', item.spiderName).then(() => {
-                    var audio = new Audio('assets/audio/notice.mp3');
-                    audio.play();
+                    new Audio('assets/audio/notice.mp3').play();
                     showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName);
-                }).catch(()=>{
-                    // 看起来这个事件并不重要
+                }).catch(()=> {
+                    // 这个事件并不重要
                 })
             }
         }
