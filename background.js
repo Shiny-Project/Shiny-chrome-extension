@@ -212,14 +212,17 @@ socket.on('event', function (data) {
                 });
             }
             else {
-                if (data.length > 19) {
+                var list = data['eventsHistory'];
+                if (data['eventsHistory'].length > 19) {
                     // 只保留最近20条
+                    list = list.splice(0,19);
+                    list.push(history);
                     chrome.storage.sync.set({
-                        'eventsHistory': data.spiice(0, 19).push(history)
+                        'eventsHistory': list
                     });
                 }
                 else {
-                    var list = data.push(history);
+                    list.push(history);
                     chrome.storage.sync.set({
                         'eventsHistory': list
                     })
