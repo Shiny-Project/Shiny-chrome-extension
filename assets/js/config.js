@@ -108,6 +108,16 @@ function addStar(item) {
     })
 
 }
+
+var levelChart = {
+    1: '一般事件',
+    2: '有趣的事件',
+    3: '重要事件',
+    4: '紧急事件',
+    5: '世界毁灭'
+};
+
+
 $(document).ready(function () {
     new Vue({
         el: '#app',
@@ -127,8 +137,28 @@ $(document).ready(function () {
                     })
                 });
             });
-            getList('eventsHistory').then(function(data){
-                self['eventsHistory'] = data
+            $.ajax({
+                "type": "GET",
+                "url": "http://api.kotori.moe:1337/Data/recent",
+                "success": function (res) {
+                    var events = res.data;
+                    for (var event of events){
+                        try{
+                            var data = JSON.parse(event.data);
+                            self.eventsHistory.push({
+                                "title": data.title,
+                                "content": data.content,
+                                "link": data.link,
+                                "spiderName": event.publisher,
+                                "hash": event.hash,
+                                "level": levelChart[event.level],
+                            })
+                        }
+                        catch(e){
+                            console.log('伤心！出错了')
+                        }
+                    }
+                }
             })
         },
         methods: {

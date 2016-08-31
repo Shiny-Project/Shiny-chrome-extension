@@ -194,41 +194,7 @@ socket.on('event', function (data) {
 
         item.level = levelChart[event && event.level];
 
-        // 记录到历史中
 
-        var history = {
-            "hash": item.hash,
-            "title": item.title,
-            "content": item.content,
-            "cover": item.cover,
-            "link": item.link,
-            "spiderName": item.spiderName
-        };
-        chrome.storage.sync.get('eventsHistory', function (data) {
-            if (Object.keys(data).length == 0) {
-                // 无历史。
-                chrome.storage.sync.set({
-                    'eventsHistory': [history]
-                });
-            }
-            else {
-                var list = data['eventsHistory'];
-                if (data['eventsHistory'].length > 19) {
-                    // 只保留最近20条
-                    list = list.splice(0,19);
-                    list.push(history);
-                    chrome.storage.sync.set({
-                        'eventsHistory': list
-                    });
-                }
-                else {
-                    list.push(history);
-                    chrome.storage.sync.set({
-                        'eventsHistory': list
-                    })
-                }
-            }
-        });
 
 
         if (item.title && item.content && item.link) {
@@ -259,6 +225,7 @@ socket.on('event', function (data) {
             console.log('事件缺少必要参数');
             console.log('收到的广播内容:' + data);
         }
+
     }
     catch (e) {
         console.log(e);
