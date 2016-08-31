@@ -147,7 +147,7 @@ $(document).ready(function () {
                             var data = JSON.parse(event.data);
                             self.eventsHistory.push({
                                 "title": data.title,
-                                "content": data.content,
+                                "content": data.content.replace(/\n/ig, '<br>'),
                                 "link": data.link,
                                 "spiderName": event.publisher,
                                 "hash": event.hash,
