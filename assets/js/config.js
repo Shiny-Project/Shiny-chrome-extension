@@ -144,7 +144,7 @@ $(document).ready(function () {
                     var events = res.data;
                     for (var event of events){
                         try{
-                            var data = JSON.parse(event.data);
+                            var data = event.data;
                             self.eventsHistory.push({
                                 "title": data.title,
                                 "content": data.content.replace(/\n/ig, '<br>'),
