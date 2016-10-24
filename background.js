@@ -2,7 +2,7 @@
 /**
  * 获取storage列表
  * @param listName
- * @returns {Array}
+ * @returns {Promise}
  */
 function getList(listName) {
     return new Promise(function (resolve, reject) {
@@ -21,7 +21,7 @@ function getList(listName) {
  * 判断是否存在于storage列表
  * @param listName
  * @param item
- * @returns {boolean}
+ * @returns {Promise}
  */
 function isInList(listName, item) {
     return new Promise(function (resolve, reject) {
