@@ -193,7 +193,7 @@ socket.on('event', function (data) {
         });
 
         item.level = levelChart[event && event.level];
-
+        item.hash = item.hash.toString();
 
 
 
