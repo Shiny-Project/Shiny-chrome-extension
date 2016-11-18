@@ -180,6 +180,38 @@ let levelChart = {
     5: '世界毁灭'
 };
 
+let subscriptionList = undefined;
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.renew){
+        renewSubsciption();
+    }
+});
+
+function renewSubsciption(){
+    // 更新登录用户的订阅列表
+    chrome.storage.sync.get('uid', data=>{
+        if (data.uid){
+            $.ajax({
+                url: 'https://shiny.kotori.moe/User/info',
+                data:{
+                    'id': data.uid
+                },
+                dataType: 'json',
+                success: res=>{
+                    let subscriptionList = [];
+                    console.log('获得订阅列表:');
+                    console.log(res.data.subscriptions);
+                    for (let item of res.data.subscriptions){
+                        subscriptionList.push(item.name);
+                    }
+                }
+            })
+        }
+    });
+}
+
+
 socket.on('event', function (data) {
     // 尝试按JSON解析
     try {
@@ -192,10 +224,19 @@ socket.on('event', function (data) {
             item[key] = event && event[key]
         });
 
+
+
         item.level = levelChart[event && event.level];
         item.hash = item.hash.toString();
 
-
+        // 过滤未订阅内容
+        if (subscriptionList !== undefined){
+            if (subscriptionList.indexOf(event.spiderName) === -1){
+                console.log('过滤了一条信息');
+                console.log(event);
+                return;
+            }
+        }
 
         if (item.title && item.content && item.link) {
             if (event.level && event.level >= 3) {

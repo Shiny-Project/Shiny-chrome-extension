@@ -125,7 +125,7 @@ $(document).ready(function () {
             block: [],
             star: [],
             eventsHistory: [],
-            isLogin: Cookies.get('uid')
+            isLogin: !!localStorage.uid
         },
         ready: function () {
             let self = this;
@@ -191,6 +191,7 @@ $(document).ready(function () {
                     success: response=>{
                         let token = response.data.token;
                         let uid = response.data.uid;
+                        localStorage.uid = uid;
                         chrome.storage.sync.set({
                             "token": token,
                             "uid": uid
@@ -205,11 +206,14 @@ $(document).ready(function () {
                                 success: response=>{
                                     let subscriptionList = [];
                                     for (let item of response.data.subscriptions){
-                                        subscriptionList.push(item.id);
+                                        subscriptionList.push(item.name);
                                     }
                                     chrome.storage.sync.set({
                                         "subscriptionList": subscriptionList
                                     },()=>{
+                                        chrome.runtime.sendMessage({renew: true}, function(response) {
+                                            console.log(response.farewell);
+                                        });
                                         location.reload();
                                     })
                                 }
@@ -220,6 +224,11 @@ $(document).ready(function () {
                         $('#tip').text('不知道什么错了。');
                     }
                 })
+            },
+            renew:function () {
+                chrome.runtime.sendMessage({renew: true}, function(response) {
+                    console.log(response.farewell);
+                });
             }
         }
     });
