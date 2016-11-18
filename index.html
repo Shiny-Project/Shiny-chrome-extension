@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/css/mdl.css">
     <script src="assets/js/jQuery.js"></script>
     <script src="assets/js/mdl.js"></script>
+    <script src="assets/js/js.cookie.js"></script>
     <script src="assets/js/Vue.js"></script>
     <script src="assets/js/config.js"></script>
     <title>Shiny接收端设置页</title>
@@ -18,6 +19,23 @@
         <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--1-col"></div>
             <div class="mdl-cell mdl-cell--10-col">
+                <template v-if="!isLogin">
+                    <form action="#" v-on:submit.prevent="login">
+                        <p class="mdl-color-text--grey-600" id="tip">登录不?</p>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="email" id="email" v-model="email">
+                            <label class="mdl-textfield__label" for="email">Email</label>
+                        </div>
+                        <br>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="password" id="password" v-model="password">
+                            <label class="mdl-textfield__label" for="password">Password</label>
+                        </div>
+                        <br>
+                        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="login" type="submit">Log in</button>
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="register" href="https://shiny.kotori.moe/register" target="_blank">Register</a>
+                    </form>
+                </template>
                 <h3>黑名单管理</h3>
                 <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                     <thead>

@@ -39,7 +39,7 @@ function isInList(listName, item) {
 function removeBlock(item) {
     return new Promise(function (resolve, reject) {
         isInList('block', item).then(function (data) {
-            var list = data;
+            let list = data;
             list.splice(data.indexOf(item), 1);
             chrome.storage.sync.set({
                 block: list
@@ -51,7 +51,7 @@ function removeBlock(item) {
 function removeStar(item) {
     return new Promise(function (resolve, reject) {
         isInList('star', item).then(function (data) {
-            var list = data;
+            let list = data;
             list.splice(data.indexOf(item), 1);
             chrome.storage.sync.set({
                 star: list
@@ -110,7 +110,7 @@ function addStar(item) {
 }
 // ===================================
 
-var notificationList = {};
+let notificationList = {};
 
 function showNotification(hash, title, content, cover, link, spiderName) {
     chrome.notifications.create(hash, {
@@ -148,7 +148,7 @@ chrome.notifications.onClosed.addListener(function (id) {
 
 // 通知按钮事件监听
 chrome.notifications.onButtonClicked.addListener(function (id, index) {
-    var res = {
+    let res = {
         0: addBlock,
         1: addStar
     }[index](notificationList[id].spiderName);
@@ -165,14 +165,14 @@ chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason == "install") {
         showNotification('Shiny', 'Shiny已安装~', '现在您可以收到来自Shiny的推送通知。', '', 'http://api.kotori.moe:1337', 'Shiny')
     } else if (details.reason == "update") {
-        var thisVersion = chrome.runtime.getManifest().version;
+        let thisVersion = chrome.runtime.getManifest().version;
         showNotification('Shiny', 'Shiny已更新至' + thisVersion + '~', '现在您可以收到来自Shiny的推送通知。', '', 'http://api.kotori.moe:1337', 'Shiny')
     }
 });
 
 // 连接Websocket
-var socket = io('http://api.kotori.moe:3737');
-var levelChart = {
+let socket = io('http://api.kotori.moe:3737');
+let levelChart = {
     1: '一般事件',
     2: '有趣的事件',
     3: '重要事件',
@@ -183,8 +183,8 @@ var levelChart = {
 socket.on('event', function (data) {
     // 尝试按JSON解析
     try {
-        var event = JSON.parse(data);
-        var item = {};
+        let event = JSON.parse(data);
+        let item = {};
         ['title', 'content', 'link', 'cover'].forEach(function (key) {
             item[key] = event && event.data && event.data[key] || undefined;
         });
