@@ -108,12 +108,39 @@ function addStar(item) {
     })
 
 }
+function generateNumberImage(number) {
+    let text;
+    if (number<10)
+        text = '0' + number;
+    else if (number >= 100)
+        text = '99';
+    else
+        text = number;
+    let c = document.createElement("canvas");
+    let ctx = c.getContext("2d");
+    ctx.font = "140px 微软雅黑";
+    ctx.fillText(text, 80, 125);
+    return c.toDataURL();
+}
+function countdown(notificationId, seconds){
+    if (seconds <= 0 || !seconds)
+        return;
+    let progress = 100;
+    $('body').timer((i, count) => {
+        chrome.notifications.update(notificationId, {
+            progress: Math.round(progress -= 100/seconds/20), // chrome这个API居然还只要整数
+            iconUrl: generateNumberImage(Math.ceil(seconds - i*0.05))
+        });
+        if (i == count -1) // 这轮子根本没法回调 简直愚蠢
+            chrome.notifications.clear(notificationId); // 倒数完毕后关闭通知
+    }, 0.05, seconds*20)
+}
 // ===================================
 
 let notificationList = {};
 
-function showNotification(hash, title, content, cover, link, spiderName) {
-    chrome.notifications.create(hash, {
+function showNotification(hash, title, content, cover, link, spiderName, countDownTime) {
+    let notificationOptions = {
         type: 'basic',
         title: title,
         message: content,
@@ -124,12 +151,22 @@ function showNotification(hash, title, content, cover, link, spiderName) {
             title: '特别关注此来源'
         }
         ]
-    }, function (id) {
+    };
+    if (countDownTime){
+        notificationOptions.type = 'progress';
+        notificationOptions.progress = 100;
+        notificationOptions.requireInteraction = true;
+    }
+    chrome.notifications.create(hash, notificationOptions , function (id) {
         notificationList[id] = {
             url: link,
             spiderName: spiderName
         };
+        if (countDownTime){
+            countdown(id, countDownTime);
+        }
     });
+
 }
 
 chrome.notifications.onClicked.addListener(function (id) {
@@ -217,7 +254,7 @@ socket.on('event', function (data) {
     try {
         let event = JSON.parse(data);
         let item = {};
-        ['title', 'content', 'link', 'cover'].forEach(function (key) {
+        ['title', 'content', 'link', 'cover', 'countdown'].forEach(function (key) {
             item[key] = event && event.data && event.data[key] || undefined;
         });
         ["hash", "spiderName"].forEach(function (key) {
@@ -250,13 +287,13 @@ socket.on('event', function (data) {
                     if (event.level == 5) {
                         new Audio('assets/audio/notice-high.mp3').play();
                     }
-                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName);
+                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
                 })
             }
             else {
                 isInList('star', item.spiderName).then(() => {
                     new Audio('assets/audio/notice.mp3').play();
-                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName);
+                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
                 }).catch(()=> {
                     // 这个事件并不重要
                 })
