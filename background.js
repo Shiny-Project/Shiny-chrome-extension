@@ -236,7 +236,7 @@ function renewSubsciption(){
                 },
                 dataType: 'json',
                 success: res=>{
-                    let subscriptionList = [];
+                    subscriptionList = [];
                     console.log('获得订阅列表:');
                     console.log(res.data.subscriptions);
                     for (let item of res.data.subscriptions){
@@ -281,12 +281,17 @@ socket.on('event', function (data) {
                     // 被屏蔽的来源
                     return false;
                 }).catch(() => {
-                    if (event.level == 4) {
+                    isInList('star', item.spiderName).then(() => {
                         new Audio('assets/audio/notice.mp3').play();
-                    }
-                    if (event.level == 5) {
-                        new Audio('assets/audio/notice-high.mp3').play();
-                    }
+                    }).catch(()=> {
+                        if (event.level == 4) {
+                            new Audio('assets/audio/notice.mp3').play();
+                        }
+                        if (event.level == 5) {
+                            new Audio('assets/audio/notice-high.mp3').play();
+                        }
+                    });
+
                     showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
                 })
             }
