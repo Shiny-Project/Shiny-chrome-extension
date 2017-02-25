@@ -263,7 +263,7 @@ socket.on('event', function (data) {
 
 
 
-        item.level = levelChart[event && event.level];
+        item.level = levelChart[event && event.level] || '规格外事件';
         item.hash = item.hash.toString();
 
         // 过滤未订阅内容
@@ -287,7 +287,7 @@ socket.on('event', function (data) {
                         if (event.level == 4) {
                             new Audio('assets/audio/notice.mp3').play();
                         }
-                        if (event.level == 5) {
+                        if (event.level >= 5) {
                             new Audio('assets/audio/notice-high.mp3').play();
                         }
                     });
