@@ -200,10 +200,10 @@ chrome.notifications.onButtonClicked.addListener(function (id, index) {
 // 更新或安装时的提示
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason == "install") {
-        showNotification('Shiny', 'Shiny已安装~', '现在您可以收到来自Shiny的推送通知。', '', 'http://api.kotori.moe:1337', 'Shiny')
+        showNotification('Shiny', 'Shiny已安装~', '现在您可以收到来自Shiny的推送通知。', '', 'https://shiny.kotori.moe', 'Shiny')
     } else if (details.reason == "update") {
         let thisVersion = chrome.runtime.getManifest().version;
-        showNotification('Shiny', 'Shiny已更新至' + thisVersion + '~', '现在您可以收到来自Shiny的推送通知。', '', 'http://api.kotori.moe:1337', 'Shiny')
+        showNotification('Shiny', 'Shiny已更新至' + thisVersion + '~', '现在您可以收到来自Shiny的推送通知。', '', 'https://shiny.kotori.moe', 'Shiny')
     }
 });
 
