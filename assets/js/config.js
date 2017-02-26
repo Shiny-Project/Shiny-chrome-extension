@@ -227,7 +227,7 @@ $(document).ready(function () {
             },
             renew:function () {
                 chrome.runtime.sendMessage({renew: true}, function(response) {
-                    console.log(response.farewell);
+                    // console.log(response.farewell);
                 });
             }
         }
