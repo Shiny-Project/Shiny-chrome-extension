@@ -117,6 +117,22 @@ let levelChart = {
     5: '世界毁灭'
 };
 
+let diffTime = date => {
+    let diff = Math.round((new Date() - new Date(date)) / 1000);
+    if (diff < 60){
+        return `${diff}秒前`;
+    }
+    else if (diff < 3600){
+        return `${Math.round(diff / 60)}分前`;
+    }
+    else if (diff < 86400){
+        return `${Math.round(diff / 3600)}小时前`;
+    }
+    else{
+        return '很久以前';
+    }
+};
+
 
 $(document).ready(function () {
     new Vue({
@@ -125,7 +141,8 @@ $(document).ready(function () {
             block: [],
             star: [],
             eventsHistory: [],
-            isLogin: !!localStorage.uid
+            isLogin: !!localStorage.uid,
+            onLoading: false
         },
         ready: function () {
             let self = this;
@@ -138,26 +155,12 @@ $(document).ready(function () {
                     })
                 });
             });
-            $.ajax({
-                "type": "GET",
-                "url": "https://shiny.kotori.moe/Data/recent",
-                "success": function (res) {
-                    let events = res.data;
-                    for (let event of events){
-                        try{
-                            let data = event.data;
-                            self.eventsHistory.push({
-                                "title": data.title,
-                                "content": data.content.replace(/\n/ig, '<br>'),
-                                "link": data.link,
-                                "spiderName": event.publisher,
-                                "hash": event.hash,
-                                "level": levelChart[event.level],
-                            })
-                        }
-                        catch(e){
-                            console.log('伤心！出错了')
-                        }
+            let page = 1;
+            this.fetchRecent(page);
+            $(document).scroll(function(){
+                if ($(document).height() - $(document).scrollTop() < 800){
+                    if (!self.onLoading){
+                        self.fetchRecent(++page);
                     }
                 }
             })
@@ -229,6 +232,53 @@ $(document).ready(function () {
                 chrome.runtime.sendMessage({renew: true}, function(response) {
                     // console.log(response.farewell);
                 });
+            },
+            fetchRecent:function (page = 1) {
+                let self = this;
+                this.onLoading = true;
+                $.ajax({
+                    "type": "GET",
+                    "url": "https://shiny.kotori.moe/Data/recent?page=" + page,
+                    "success": function (res) {
+                        let events = res.data;
+                        for (let event of events){
+                            try{
+                                let data = event.data;
+                                self.eventsHistory.push({
+                                    "id": event.id,
+                                    "title": data.title,
+                                    "content": data.content.replace(/\n/ig, '<br>'),
+                                    "link": data.link,
+                                    "spiderName": event.publisher,
+                                    "hash": event.hash,
+                                    "level": levelChart[event.level],
+                                    "createdAt": event.createdAt + `  (${diffTime(event.createdAt)})`
+                                })
+                            }
+                            catch(e){
+                                console.log('伤心！出错了', e)
+                            }
+                        }
+                        self.onLoading = false;
+                    }
+                })
+            },
+            rate: function ($event) {
+                let eventId = $($event.target).parent().data('eventid');
+                let score = $($event.target).data('score');
+                $($event.target).parent().fadeOut('fast');
+
+                $.ajax({
+                    url: "https://shiny.kotori.moe/Data/rate",
+                    type: "POST",
+                    data: {
+                        'eventId': eventId,
+                        'score': score
+                    },
+                    success: function(data){
+                        // not important.
+                    }
+                })
             }
         }
     });
