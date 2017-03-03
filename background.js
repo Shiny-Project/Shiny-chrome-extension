@@ -250,6 +250,12 @@ function renewSubsciption(){
 
 
 socket.on('event', function (data) {
+
+    if (!!localStorage.mute){
+        // 免打扰。
+        return;
+    }
+
     // 尝试按JSON解析
     try {
         let event = JSON.parse(data);

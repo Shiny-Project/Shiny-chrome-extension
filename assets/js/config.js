@@ -119,6 +119,7 @@ $(document).ready(function () {
             block: [],
             star: [],
             isLogin: !!localStorage.uid,
+            isMute: !!localStorage.mute,
             onLoading: false
         },
         ready: function () {
@@ -195,7 +196,13 @@ $(document).ready(function () {
                         });
                     },
                     error: e=>{
-                        $('#tip').text('不知道什么错了。');
+                        if (e.responseJSON && e.responseJSON.error && e.responseJSON.error.info){
+                            $('#tip').text(e.responseJSON.error.info);
+                        }
+                        else{
+                            $('#tip').text('不知道什么错了。');
+                        }
+
                     }
                 })
             },
@@ -204,6 +211,9 @@ $(document).ready(function () {
                     // console.log(response.farewell);
                 });
             },
+            toggleMute:function ($event) {
+                localStorage.mute = $($event.target).is(':checked');
+            }
         }
     });
 });
