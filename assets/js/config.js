@@ -1,4 +1,6 @@
 "use strict";
+
+let API_BASE = 'https://shiny.kotori.moe';
 /**
  * 获取storage列表
  * @param listName
@@ -109,30 +111,6 @@ function addStar(item) {
 
 }
 
-let levelChart = {
-    1: '一般事件',
-    2: '有趣的事件',
-    3: '重要事件',
-    4: '紧急事件',
-    5: '世界毁灭'
-};
-
-let diffTime = date => {
-    let diff = Math.round((new Date() - new Date(date)) / 1000);
-    if (diff < 60){
-        return `${diff}秒前`;
-    }
-    else if (diff < 3600){
-        return `${Math.round(diff / 60)}分前`;
-    }
-    else if (diff < 86400){
-        return `${Math.round(diff / 3600)}小时前`;
-    }
-    else{
-        return '很久以前';
-    }
-};
-
 
 $(document).ready(function () {
     new Vue({
@@ -140,7 +118,6 @@ $(document).ready(function () {
         data: {
             block: [],
             star: [],
-            eventsHistory: [],
             isLogin: !!localStorage.uid,
             onLoading: false
         },
@@ -155,21 +132,12 @@ $(document).ready(function () {
                     })
                 });
             });
-            let page = 1;
-            this.fetchRecent(page);
-            $(document).scroll(function(){
-                if ($(document).height() - $(document).scrollTop() < 800){
-                    if (!self.onLoading){
-                        self.fetchRecent(++page);
-                    }
-                }
-            })
         },
         methods: {
             removeSpiderFromBlockList: function (index) {
                 removeBlock(this.block[index].name).then(() => {
                     this.block.splice(index, 1);
-                }).catch((e) => { 
+                }).catch((e) => {
                     console.log(e)
                 })
             },
@@ -178,13 +146,16 @@ $(document).ready(function () {
                     this.star.splice(index, 1);
                 }).catch(() => { })
             },
+            /**
+             * 登录
+             */
             login:function () {
                 if (!this.email || !this.password){
                     $('#tip').text('好好填，懂吧。');
                     return;
                 }
                 $.ajax({
-                    url: 'https://shiny.kotori.moe/User/login',
+                    url: API_BASE + '/User/login',
                     data: {
                         email: this.email,
                         password: this.password
@@ -201,7 +172,7 @@ $(document).ready(function () {
                         }, ()=>{
                             $('#tip').text('登录成功，抓取信息');
                             $.ajax({
-                                url: 'https://shiny.kotori.moe/User/info',
+                                url: API_BASE + '/User/info',
                                 data:{
                                     'id': uid
                                 },
@@ -233,53 +204,6 @@ $(document).ready(function () {
                     // console.log(response.farewell);
                 });
             },
-            fetchRecent:function (page = 1) {
-                let self = this;
-                this.onLoading = true;
-                $.ajax({
-                    "type": "GET",
-                    "url": "https://shiny.kotori.moe/Data/recent?page=" + page,
-                    "success": function (res) {
-                        let events = res.data;
-                        for (let event of events){
-                            try{
-                                let data = event.data;
-                                self.eventsHistory.push({
-                                    "id": event.id,
-                                    "title": data.title,
-                                    "content": data.content.replace(/\n/ig, '<br>'),
-                                    "link": data.link,
-                                    "spiderName": event.publisher,
-                                    "hash": event.hash,
-                                    "level": levelChart[event.level],
-                                    "createdAt": event.createdAt + `  (${diffTime(event.createdAt)})`
-                                })
-                            }
-                            catch(e){
-                                console.log('伤心！出错了', e)
-                            }
-                        }
-                        self.onLoading = false;
-                    }
-                })
-            },
-            rate: function ($event) {
-                let eventId = $($event.target).parent().data('eventid');
-                let score = $($event.target).data('score');
-                $($event.target).parent().fadeOut('fast');
-
-                $.ajax({
-                    url: "https://shiny.kotori.moe/Data/rate",
-                    type: "POST",
-                    data: {
-                        'eventId': eventId,
-                        'score': score
-                    },
-                    success: function(data){
-                        // not important.
-                    }
-                })
-            }
         }
     });
 });

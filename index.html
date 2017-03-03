@@ -10,8 +10,8 @@
     <script src="assets/js/mdl.js"></script>
     <script src="assets/js/js.cookie.js"></script>
     <script src="assets/js/Vue.js"></script>
-    <script src="assets/js/config.js"></script>
-    <title>Shiny接收端设置页</title>
+    <script src="assets/js/index.js"></script>
+    <title>Shiny!</title>
 </head>
 
 <body>
@@ -19,65 +19,7 @@
         <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--1-col"></div>
             <div class="mdl-cell mdl-cell--10-col">
-                <template v-if="!isLogin">
-                    <form action="#" v-on:submit.prevent="login">
-                        <p class="mdl-color-text--grey-600" id="tip">登录不?</p>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="email" id="email" v-model="email">
-                            <label class="mdl-textfield__label" for="email">Email</label>
-                        </div>
-                        <br>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="password" id="password" v-model="password">
-                            <label class="mdl-textfield__label" for="password">Password</label>
-                        </div>
-                        <br>
-                        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="login" type="submit">Log in</button>
-                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="register" href="https://shiny.kotori.moe/register" target="_blank">Register</a>
-                    </form>
-                </template>
-                <template v-else>
-                    <a v-on:click="renew" href="#">刷新订阅</a>
-                </template>
-                <h3>黑名单管理</h3>
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                    <thead>
-                        <tr>
-                            <th class="mdl-data-table__cell--non-numeric">Spider</th>
-                            <th>删除</th>
-                        </tr>
-                    </thead>
-                    <tbody v-for="spider in block">
-                        <tr>
-                            <td>{{spider.name}}</td>
-                            <td>
-                                <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" v-on:click="removeSpiderFromBlockList($index)">
-                                <i class="material-icons">close</i>
-                            </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h3>关注名单管理</h3>
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                    <thead>
-                        <tr>
-                            <th class="mdl-data-table__cell--non-numeric">Spider</th>
-                            <th>删除</th>
-                        </tr>
-                    </thead>
-                    <tbody v-for="spider in star">
-                        <tr>
-                            <td>{{spider.name}}</td>
-                            <td>
-                                <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" v-on:click="removeSpiderFromStarList($index)">
-                            <i class="material-icons">close</i>
-                        </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                <a href="./config/index.html">设置页</a>
                 <h3>历史消息(非实时)</h3>
                 <div v-for="event in eventsHistory" transition="fade">
                     <div class="mdl-card mdl-shadow--2dp" style="width: 100%;">
