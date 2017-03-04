@@ -38,14 +38,26 @@
                 </template>
                 <template v-else>
                     <a v-on:click="renew" href="#">刷新订阅</a>
+                    <a v-on:click="logout" href="#">登出</a>
                 </template>
                 <h3>设置</h3>
                 <div>
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
-                        <input type="checkbox" id="switch-1" class="mdl-switch__input" :checked="mute" @change="toggleMute">
-                        <span class="mdl-switch__label">免打扰模式</span>
-                    </label>
+                    <form>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
+                            <input type="checkbox" id="switch-1" class="mdl-switch__input" v-model="isMute" @change="toggleMute">
+                            <span class="mdl-switch__label">免打扰模式</span>
+                            <span class="mdl-switch__label mdl-color-text--grey-600">免打扰模式 开启免打扰模式后将不会弹出任何通知。</span>
+                        </label>
+                        <div :style="{ opacity: isMute ? 1 : 0}">
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
+                                <input type="checkbox" id="switch-2" class="mdl-switch__input" v-model="exceptFavorite" @change="toggleExceptFavorite">
+                                <span class="mdl-switch__label">但特别关注除外</span>
+                                <span class="mdl-switch__label mdl-color-text--grey-600">即使在免打扰模式下也会弹出特别关注来源的通知。</span>
+                            </label>
+                        </div>
+                    </form>
                 </div>
+                <br>
                 <h3>黑名单管理</h3>
                 <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                     <thead>

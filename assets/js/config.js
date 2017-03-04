@@ -113,13 +113,14 @@ function addStar(item) {
 
 
 $(document).ready(function () {
-    new Vue({
+    window.$vm = new Vue({
         el: '#app',
         data: {
             block: [],
             star: [],
             isLogin: !!localStorage.uid,
-            isMute: !!localStorage.mute,
+            isMute: localStorage.mute === 'true',
+            exceptFavorite: localStorage.exceptFavorite === 'true',
             onLoading: false
         },
         ready: function () {
@@ -155,6 +156,7 @@ $(document).ready(function () {
                     $('#tip').text('好好填，懂吧。');
                     return;
                 }
+                $('#tip').text('通信中');
                 $.ajax({
                     url: API_BASE + '/User/login',
                     data: {
@@ -212,7 +214,14 @@ $(document).ready(function () {
                 });
             },
             toggleMute:function ($event) {
-                localStorage.mute = $($event.target).is(':checked');
+                localStorage.mute = $event.target.checked;
+            },
+            toggleExceptFavorite: function ($event) {
+                localStorage.exceptFavorite = $event.target.checked;
+            },
+            logout: function () {
+                delete localStorage.uid;
+                location.reload();
             }
         }
     });

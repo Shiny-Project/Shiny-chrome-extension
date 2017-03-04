@@ -251,10 +251,7 @@ function renewSubsciption(){
 
 socket.on('event', function (data) {
 
-    if (!!localStorage.mute){
-        // 免打扰。
-        return;
-    }
+
 
     // 尝试按JSON解析
     try {
@@ -267,7 +264,18 @@ socket.on('event', function (data) {
             item[key] = event && event[key]
         });
 
-
+        if (localStorage.mute === 'true'){
+            // 免打扰
+            if (localStorage.exceptFavorite === 'true'){
+                isInList('star', item.spiderName).then(() => {
+                    new Audio('assets/audio/notice.mp3').play();
+                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
+                }).catch(()=> {
+                    // 这个事件并不重要
+                });
+            }
+            return;
+        }
 
         item.level = levelChart[event && event.level] || '规格外事件';
         item.hash = item.hash.toString();
