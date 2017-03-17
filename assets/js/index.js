@@ -1,6 +1,6 @@
 "use strict";
 
-let API_BASE = 'https://shiny.kotori.moe';
+let API_BASE = 'http://127.0.0.1:1337';
 /**
  * 获取storage列表
  * @param listName
@@ -88,7 +88,8 @@ $(document).ready(function () {
                                     "spiderName": event.publisher,
                                     "hash": event.hash,
                                     "level": levelChart[event.level],
-                                    "createdAt": event.createdAt + `  (${diffTime(event.createdAt)})`
+                                    "createdAt": event.createdAt + `  (${diffTime(event.createdAt)})`,
+                                    "keywords": event.keywords
                                 })
                             }
                             catch(e){
@@ -119,6 +120,9 @@ $(document).ready(function () {
                         // not important.
                     }
                 })
+            },
+            generateGoogleURL: keyword => {
+                return `https://www.google.co.jp/#newwindow=1&q=${keyword}&*`;
             }
         }
     });
