@@ -1,6 +1,6 @@
 "use strict";
 
-let API_BASE = 'http://127.0.0.1:1337';
+let API_BASE = 'https://shiny.kotori.moe';
 /**
  * 获取storage列表
  * @param listName
