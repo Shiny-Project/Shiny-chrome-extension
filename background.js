@@ -110,7 +110,7 @@ function addStar(item) {
 }
 function generateNumberImage(number) {
     let text;
-    if (number<10)
+    if (number < 10)
         text = '0' + number;
     else if (number >= 100)
         text = '99';
@@ -122,18 +122,18 @@ function generateNumberImage(number) {
     ctx.fillText(text, 80, 125);
     return c.toDataURL();
 }
-function countdown(notificationId, seconds){
+function countdown(notificationId, seconds) {
     if (seconds <= 0 || !seconds)
         return;
     let progress = 100;
     $('body').timer((i, count) => {
         chrome.notifications.update(notificationId, {
-            progress: Math.round(progress -= 100/seconds/20), // chrome这个API居然还只要整数
-            iconUrl: generateNumberImage(Math.ceil(seconds - i*0.05))
+            progress: Math.round(progress -= 100 / seconds / 20), // chrome这个API居然还只要整数
+            iconUrl: generateNumberImage(Math.ceil(seconds - i * 0.05))
         });
-        if (i == count -1) // 这轮子根本没法回调 简直愚蠢
+        if (i == count - 1) // 这轮子根本没法回调 简直愚蠢
             chrome.notifications.clear(notificationId); // 倒数完毕后关闭通知
-    }, 0.05, seconds*20)
+    }, 0.05, seconds * 20)
 }
 // ===================================
 
@@ -152,17 +152,17 @@ function showNotification(hash, title, content, cover, link, spiderName, countDo
         }
         ]
     };
-    if (countDownTime){
+    if (countDownTime) {
         notificationOptions.type = 'progress';
         notificationOptions.progress = 100;
         notificationOptions.requireInteraction = true;
     }
-    chrome.notifications.create(hash, notificationOptions , function (id) {
+    chrome.notifications.create(hash, notificationOptions, function (id) {
         notificationList[id] = {
             url: link,
             spiderName: spiderName
         };
-        if (countDownTime){
+        if (countDownTime) {
             countdown(id, countDownTime);
         }
     });
@@ -219,27 +219,27 @@ let levelChart = {
 
 let subscriptionList = undefined;
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.renew){
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.renew) {
         renewSubsciption();
     }
 });
 
-function renewSubsciption(){
+function renewSubsciption() {
     // 更新登录用户的订阅列表
-    chrome.storage.sync.get('uid', data=>{
-        if (data.uid){
+    chrome.storage.sync.get('uid', data => {
+        if (data.uid) {
             $.ajax({
                 url: 'https://shiny.kotori.moe/User/info',
-                data:{
+                data: {
                     'id': data.uid
                 },
                 dataType: 'json',
-                success: res=>{
+                success: res => {
                     subscriptionList = [];
                     console.log('获得订阅列表:');
                     console.log(res.data.subscriptions);
-                    for (let item of res.data.subscriptions){
+                    for (let item of res.data.subscriptions) {
                         subscriptionList.push(item.name);
                     }
                 }
@@ -264,13 +264,22 @@ socket.on('event', function (data) {
             item[key] = event && event[key]
         });
 
-        if (localStorage.mute === 'true'){
+        // 过滤未订阅内容
+        if (subscriptionList !== undefined) {
+            if (subscriptionList.indexOf(event.spiderName) === -1) {
+                console.log('过滤了一条信息');
+                console.log(event);
+                return;
+            }
+        }
+
+        if (localStorage.mute === 'true') {
             // 免打扰
-            if (localStorage.exceptFavorite === 'true'){
+            if (localStorage.exceptFavorite === 'true') {
                 isInList('star', item.spiderName).then(() => {
                     new Audio('assets/audio/notice.mp3').play();
                     showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
-                }).catch(()=> {
+                }).catch(() => {
                     // 这个事件并不重要
                 });
             }
@@ -280,15 +289,6 @@ socket.on('event', function (data) {
         item.level = levelChart[event && event.level] || '规格外事件';
         item.hash = item.hash.toString();
 
-        // 过滤未订阅内容
-        if (subscriptionList !== undefined){
-            if (subscriptionList.indexOf(event.spiderName) === -1){
-                console.log('过滤了一条信息');
-                console.log(event);
-                return;
-            }
-        }
-
         if (item.title && item.content && item.link) {
             if (event.level && event.level >= 3) {
                 isInList('block', item.spiderName).then(() => {
@@ -297,7 +297,7 @@ socket.on('event', function (data) {
                 }).catch(() => {
                     isInList('star', item.spiderName).then(() => {
                         new Audio('assets/audio/notice.mp3').play();
-                    }).catch(()=> {
+                    }).catch(() => {
                         if (event.level == 4) {
                             new Audio('assets/audio/notice.mp3').play();
                         }
@@ -313,7 +313,7 @@ socket.on('event', function (data) {
                 isInList('star', item.spiderName).then(() => {
                     new Audio('assets/audio/notice.mp3').play();
                     showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
-                }).catch(()=> {
+                }).catch(() => {
                     // 这个事件并不重要
                 })
             }
