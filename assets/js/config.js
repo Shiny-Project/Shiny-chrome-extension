@@ -121,6 +121,7 @@ $(document).ready(function () {
             isLogin: !!localStorage.uid,
             isMute: localStorage.mute === 'true',
             exceptFavorite: localStorage.exceptFavorite === 'true',
+            tts: localStorage.tts === 'true',
             onLoading: false
         },
         ready: function () {

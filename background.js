@@ -139,34 +139,35 @@ function countdown(notificationId, seconds) {
 
 let notificationList = {};
 
-function showNotification(hash, title, content, cover, link, spiderName, countDownTime) {
+function showNotification(event){
     let notificationOptions = {
         type: 'basic',
-        title: title,
-        message: content,
-        iconUrl: cover || './assets/image/kotori.jpg',
         buttons: [{
             title: '屏蔽此来源'
         }, {
             title: '特别关注此来源'
-        }
-        ]
+        }]
     };
-    if (countDownTime) {
+
+    if (event.countdown){
         notificationOptions.type = 'progress';
         notificationOptions.progress = 100;
         notificationOptions.requireInteraction = true;
     }
-    chrome.notifications.create(hash, notificationOptions, function (id) {
+
+    notificationOptions.title = event.data.title || "UNKNOWN EVENT";
+    notificationOptions.message = event.data.content || "";
+    notificationOptions.iconUrl = event.data.cover || './assets/image/kotori.jpg';
+
+    chrome.notifications.create(event.hash , notificationOptions, function (id) {
         notificationList[id] = {
-            url: link,
-            spiderName: spiderName
+            url: event.data.link,
+            spiderName: event.spiderName
         };
-        if (countDownTime) {
-            countdown(id, countDownTime);
+        if (event.countdown) {
+            countdown(id, event.countdown);
         }
     });
-
 }
 
 chrome.notifications.onClicked.addListener(function (id) {
@@ -200,15 +201,31 @@ chrome.notifications.onButtonClicked.addListener(function (id, index) {
 // 更新或安装时的提示
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason == "install") {
-        showNotification('Shiny', 'Shiny已安装~', '现在您可以收到来自Shiny的推送通知。', '', 'https://shiny.kotori.moe', 'Shiny')
+        showNotification({
+            spiderName: "Shiny",
+            hash: "Shiny",
+            data: {
+                title: "Shiny已安装~",
+                content: "现在您可以收到来自Shiny的推送通知。",
+                link: "https://shiny.kotori.moe",
+            }
+        })
     } else if (details.reason == "update") {
         let thisVersion = chrome.runtime.getManifest().version;
-        showNotification('Shiny', 'Shiny已更新至' + thisVersion + '~', '现在您可以收到来自Shiny的推送通知。', '', 'https://shiny.kotori.moe', 'Shiny')
+        showNotification({
+            spiderName: "Shiny",
+            hash: "Shiny",
+            data: {
+                title: `Shiny已更新至${thisVersion}~`,
+                content: "现在您可以收到来自Shiny的推送通知。",
+                link: "https://shiny.kotori.moe",
+            }
+        })
     }
 });
 
 // 连接Websocket
-let socket = io('http://api.kotori.moe:3737');
+let socket = io('http://websocket.shiny.kotori.moe:3737');
 let levelChart = {
     1: '一般事件',
     2: '有趣的事件',
@@ -217,7 +234,7 @@ let levelChart = {
     5: '世界毁灭'
 };
 
-let subscriptionList = undefined;
+let subscriptionList;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.renew) {
@@ -250,19 +267,9 @@ function renewSubsciption() {
 
 
 socket.on('event', function (data) {
-
-
-
     // 尝试按JSON解析
     try {
         let event = JSON.parse(data);
-        let item = {};
-        ['title', 'content', 'link', 'cover', 'countdown'].forEach(function (key) {
-            item[key] = event && event.data && event.data[key] || undefined;
-        });
-        ["hash", "spiderName"].forEach(function (key) {
-            item[key] = event && event[key]
-        });
 
         // 过滤未订阅内容
         if (subscriptionList !== undefined) {
@@ -273,29 +280,27 @@ socket.on('event', function (data) {
             }
         }
 
-        if (localStorage.mute === 'true') {
-            // 免打扰
-            if (localStorage.exceptFavorite === 'true') {
-                isInList('star', item.spiderName).then(() => {
-                    new Audio('assets/audio/notice.mp3').play();
-                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
-                }).catch(() => {
-                    // 这个事件并不重要
-                });
+        if (event.data.title && event.data.content && event.data.link) {
+            if (localStorage.mute === 'true') {
+                // 免打扰
+                if (localStorage.exceptFavorite === 'true') {
+                    isInList('star', item.spiderName).then(() => {
+                        new Audio('assets/audio/notice.mp3').play();
+                        showNotification(event);
+                    }).catch(() => {
+                        // 这个事件并不重要
+                    });
+                }
+                return;
             }
-            return;
-        }
 
-        item.level = levelChart[event && event.level] || '规格外事件';
-        item.hash = item.hash.toString();
-
-        if (item.title && item.content && item.link) {
             if (event.level && event.level >= 3) {
-                isInList('block', item.spiderName).then(() => {
+                isInList('block', event.spiderName).then(() => {
                     // 被屏蔽的来源
                     return false;
                 }).catch(() => {
-                    isInList('star', item.spiderName).then(() => {
+                    isInList('star', event.spiderName).then(() => {
+                        // 特别关注
                         new Audio('assets/audio/notice.mp3').play();
                     }).catch(() => {
                         if (event.level == 4) {
@@ -306,13 +311,14 @@ socket.on('event', function (data) {
                         }
                     });
 
-                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
+                    showNotification(event);
                 })
             }
             else {
-                isInList('star', item.spiderName).then(() => {
+                isInList('star', event.spiderName).then(() => {
+                    // 特别关注
                     new Audio('assets/audio/notice.mp3').play();
-                    showNotification(item.hash, item.title, item.content, item.cover, item.link, item.spiderName, item.countdown);
+                    showNotification(event);
                 }).catch(() => {
                     // 这个事件并不重要
                 })

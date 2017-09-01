@@ -57,7 +57,7 @@ $(document).ready(function () {
             let page = 1;
             this.fetchRecent(page);
             $(document).scroll(function(){
-                if ($(document).height() - $(document).scrollTop() < 800){
+                if ($(document).height() - $(document).scrollTop() < window.innerHeight + 7.26){
                     if (!self.onLoading){
                         self.fetchRecent(++page);
                     }
@@ -120,6 +120,9 @@ $(document).ready(function () {
                         // not important.
                     }
                 })
+            },
+            goVideoSubmitting: (eventId) => {
+                location.href = `./tools/youtube_upload.html#${eventId}`;
             },
             generateGoogleURL: keyword => {
                 return `https://www.google.co.jp/#newwindow=1&q=${keyword}&*`;
