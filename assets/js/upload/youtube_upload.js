@@ -205,7 +205,9 @@ $(() => {
                 }
             },
             setTid($event){
-                this.form.tid = +$($event.target).data('tid');
+                if ($event.clientX && $event.clientY){
+                    this.form.tid = +$($event.target).data('tid');
+                }
             }
         },
         filters: {
