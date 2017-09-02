@@ -162,7 +162,7 @@ $(() => {
                         let status = await checkUploadJob(jobId);
                         if (status.status === "error"){
                             this.log.push("远程上传发生错误");
-                            break;
+                            return;
                         }
                         if (status.status === "complete"){
                             this.log.push("远程上传完成");
