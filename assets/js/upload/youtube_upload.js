@@ -83,56 +83,59 @@ $(() => {
                 this.showPanel = true;
                 this.startTime = new Date();
 
-                this.log.push("正在解析视频地址");
-                try{
-                    ytbInfo = await parseYouTube(this.event.link);
-                    console.info(ytbInfo);
-                }
-                catch(e){
-                    this.log.push("解析视频地址失败");
-                    return;
-                }
+                this.log.push("正在查询远程服务器视频下载状态");
 
-                this.log.push("正在建立与下载服务器的连接");
-                let aria2 = new Aria2({
-                    host: "us1.shiny.kotori.moe",
-                    secret: "nRpDrFFf3R5tI9Xc"
-                });
 
-                this.log.push("发送远程下载指令");
-                try{
-                    gid = await aria2.addUri([
-                        ytbInfo.data.url
-                    ], {
-                        header: `Cookie: ${ytbInfo.data.cookies}`,
-                        "max-tries": 1,
-                        "out": `${videoId}.mp4`
-                    });
-                }
-                catch(e){
-                    this.log.push("建立下载任务失败");
-                    return;
-                }
-                let isFinished = false;
-                while(1){
-                    let response = await aria2.tellStatus(gid);
-                    if (response.status === "error"){
-                        this.log.push("远程下载失败，正在移除任务");
-                        await aria2.removeDownloadResult(gid);
-                        this.log.push("移除任务成功");
-                        break;
-                    }
-                    if (response.totalLength !== 0){
-                        this.progress = response.completedLength / response.totalLength * 100;
-                        if (response.status === "complete"){
-                            this.log.push("远程下载完成");
-                            isFinished = true;
-                            break;
-                        }
-                    }
-                    console.log(response);
-                    await sleep(1000);
-                }
+                // this.log.push("正在解析视频地址");
+                // try{
+                //     ytbInfo = await parseYouTube(this.event.link);
+                //     console.info(ytbInfo);
+                // }
+                // catch(e){
+                //     this.log.push("解析视频地址失败");
+                //     return;
+                // }
+
+                // this.log.push("正在建立与下载服务器的连接");
+                // let aria2 = new Aria2({
+                //     host: "us1.shiny.kotori.moe",
+                //     secret: "nRpDrFFf3R5tI9Xc"
+                // });
+
+                // this.log.push("发送远程下载指令");
+                // try{
+                //     gid = await aria2.addUri([
+                //         ytbInfo.data.url
+                //     ], {
+                //         header: `Cookie: ${ytbInfo.data.cookies}`,
+                //         "max-tries": 1,
+                //         "out": `${videoId}.mp4`
+                //     });
+                // }
+                // catch(e){
+                //     this.log.push("建立下载任务失败");
+                //     return;
+                // }
+                let isFinished = true;
+                // while(1){
+                //     let response = await aria2.tellStatus(gid);
+                //     if (response.status === "error"){
+                //         this.log.push("远程下载失败，正在移除任务");
+                //         await aria2.removeDownloadResult(gid);
+                //         this.log.push("移除任务成功");
+                //         break;
+                //     }
+                //     if (response.totalLength !== 0){
+                //         this.progress = response.completedLength / response.totalLength * 100;
+                //         if (response.status === "complete"){
+                //             this.log.push("远程下载完成");
+                //             isFinished = true;
+                //             break;
+                //         }
+                //     }
+                //     console.log(response);
+                //     await sleep(1000);
+                // }
                 if (isFinished){
 
                     this.log.push("正在确认文件大小");

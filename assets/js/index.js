@@ -89,7 +89,6 @@ $(document).ready(function () {
                                     "hash": event.hash,
                                     "level": levelChart[event.level],
                                     "createdAt": event.createdAt + `  (${diffTime(event.createdAt)})`,
-                                    "keywords": event.keywords
                                 })
                             }
                             catch(e){
@@ -124,9 +123,6 @@ $(document).ready(function () {
             goVideoSubmitting: (eventId) => {
                 location.href = `./tools/youtube_upload.html#${eventId}`;
             },
-            generateGoogleURL: keyword => {
-                return `https://www.google.co.jp/#newwindow=1&q=${keyword}&*`;
-            }
         }
     });
 });

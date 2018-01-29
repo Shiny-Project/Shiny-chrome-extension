@@ -31,14 +31,6 @@
                         </div>
                         <div class="mdl-card__supporting-text">
                             <span>{{{ event.content }}}</span>
-                            <hr>
-                            <h5>关键词<small>Powered By Yahoo! NLP API Service</small></h5>
-                            <div class="keyword-list">
-                                <span class="keyword" v-for="keyword in event.keywords">
-                                    <span><a :href="generateGoogleURL(keyword.keyword)" target="_blank">{{keyword.keyword}}</a></span>
-                                    <sup title="重要度">{{keyword.score}}</sup>
-                                </span>
-                            </div>
                             <div class="rate" :data-eventid="event.id" @click="rate">
                                 <h5>请帮助我们评价消息的重要度</h5>
                                 <button class="mdl-button mdl-js-button mdl-button--accent" v-for="i in 10" :data-score="i + 1">

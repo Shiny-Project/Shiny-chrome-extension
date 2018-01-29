@@ -101,6 +101,14 @@ let parseYouTube = function(url){
         })
     })
 }
+
+let getDownloadInfo = function(videoId){
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            
+        })
+    })
+}
 /**
  * 获得文件大小
  * @param {string} videoId 
@@ -278,8 +286,8 @@ let finishUpload = function(serverFileName, fileSize){
             url: "https://data.bilibili.com/v/web/web_ugc_upload",
             type: "GET",
             data: {
-                mid: getMid(),
-                fts: getFts(),
+                mid: await getMid(),
+                fts: await getFts(),
                 url: "https%3A%2F%2Fmember.bilibili.com%2Fvideo%2Fresubmit.html",
                 proid: "1",
                 ptype: "1",
