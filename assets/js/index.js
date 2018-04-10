@@ -76,7 +76,7 @@ $(document).ready(function () {
                     "type": "GET",
                     "url": API_BASE + "/Data/recent?page=" + page,
                     "success": function (res) {
-                        let events = res.data;
+                        let events = res.data.events;
                         for (let event of events){
                             try{
                                 let data = event.data;
