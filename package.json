@@ -1,0 +1,36 @@
+{
+  "name": "shiny-chrome-extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack-cli --config ./build/webpack.config.js",
+    "watch": "webpack-cli --config ./build/webpack.config.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Last-Order/Shiny-chrome-extension.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Last-Order/Shiny-chrome-extension/issues"
+  },
+  "homepage": "https://github.com/Last-Order/Shiny-chrome-extension#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "path": "^0.12.7",
+    "vue-loader": "^14.2.2",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.5.0"
+  },
+  "dependencies": {
+    "element-ui": "^2.3.4",
+    "vue": "^2.5.16"
+  }
+}
