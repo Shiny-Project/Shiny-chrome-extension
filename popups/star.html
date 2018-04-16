@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>特别关注</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../assets/css/mdl.css">
+    <script src="../assets/js/mdl.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="options-container">
+            <div class="options">
+                <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">特别关注所有来自###的消息</button>
+            </div>
+            <div class="options">
+                <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">特别关注所有来自###:####的消息</button>
+            </div>
+            <div class="options">
+                <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">取消操作</button>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    body {
+        margin: 0;
+    }
+
+    .options {
+        padding: 15px;
+    }
+</style>
+<script>
+    $(() => {
+        console.log(location.hash);
+    })
+</script>
+</html>
