@@ -10,6 +10,7 @@ const generateHTMLPluginConf = (input) => {
         result.push(new HtmlWebpackPlugin({
             filename: path.resolve(__dirname, `../dist/${file}/index.html`),
             template: path.resolve(__dirname, '../src/index.html'),
+            chunks: ['vendors', input[file]['output']]
         }))
     }
     return result;
@@ -35,11 +36,11 @@ const generateConfig = (input) => {
                 root: path.resolve(__dirname, '../')
             }),
             new ExtractTextPlugin("[name].css"),
-            ...generateHTMLPluginConf(input)
+            ...generateHTMLPluginConf(input),
         ],
         module: {
             rules: [{
-                test: /\.vue$/, 
+                test: /\.vue$/,
                 loader: 'vue-loader',
                 options: {
                     extractCSS: true
@@ -49,7 +50,20 @@ const generateConfig = (input) => {
         output: {
             filename: '[name].js',
             path: path.resolve(__dirname, `../dist/`),
-        }
+        },
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    commons: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: "vendors",
+                        chunks: "all"
+                    },
+
+                },
+                name: true
+            }
+        },
     }
 }
 
@@ -58,6 +72,10 @@ module.exports = [
         'background': {
             input: 'background/index.js',
             output: 'background/bundle'
+        },
+        'recent': {
+            input: 'recent/index.js',
+            output: 'recent/bundle'
         }
     })
 ]
