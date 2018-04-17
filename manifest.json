@@ -1,6 +1,6 @@
 {
   "name": "Shiny",
-  "version": "7.7.17",
+  "version": "7.7.18",
   "author": "Eridanus Sora",
   "manifest_version": 2,
   "description": "Shiny监视",
@@ -8,11 +8,11 @@
     "48": "assets/image/Shiny.png"
   },
   "browser_action": {
-    "default_popup": "index.html",
+    "default_popup": "./recent/index.html",
     "default_title": "打开设置"
   },
   "background": {
-    "page": "background.html",
+    "page": "./background/index.html",
     "persistent": true
   },
   "permissions": [

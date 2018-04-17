@@ -3,6 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const generateHTMLPluginConf = (input) => {
     const result = [];
@@ -35,6 +36,11 @@ const generateConfig = (input) => {
             new CleanWebpackPlugin([path.resolve(__dirname, '../dist')], {
                 root: path.resolve(__dirname, '../')
             }),
+            new CopyWebpackPlugin([{
+                from: path.resolve(__dirname, '../assets/**/*'), to: path.resolve(__dirname, '../dist/'),
+            }, {
+                from: path.resolve(__dirname, '../manifest.json'), to: path.resolve(__dirname, '../dist/manifest.json')
+            }]),
             new ExtractTextPlugin("[name].css"),
             ...generateHTMLPluginConf(input),
         ],
@@ -45,6 +51,12 @@ const generateConfig = (input) => {
                 options: {
                     extractCSS: true
                 }
+            }, {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
+            }, {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url-loader',
             }]
         },
         output: {
@@ -69,13 +81,17 @@ const generateConfig = (input) => {
 
 module.exports = [
     generateConfig({
-        'background': {
+        "background": {
             input: 'background/index.js',
             output: 'background/bundle'
         },
         'recent': {
             input: 'recent/index.js',
             output: 'recent/bundle'
+        },
+        'landing': {
+            input: 'landing.js',
+            output: 'landing/bundle'
         }
     })
 ]

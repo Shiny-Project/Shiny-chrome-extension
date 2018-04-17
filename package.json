@@ -20,16 +20,21 @@
   "homepage": "https://github.com/Last-Order/Shiny-chrome-extension#readme",
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.2.0",
     "path": "^0.12.7",
+    "style-loader": "^0.20.3",
+    "url-loader": "^1.0.1",
     "vue-loader": "^14.2.2",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.5.0"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "element-ui": "^2.3.4",
+    "socket.io-client": "^2.1.0",
     "vue": "^2.5.16"
   }
 }
