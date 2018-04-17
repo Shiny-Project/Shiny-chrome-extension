@@ -92,6 +92,18 @@ module.exports = [
         'landing': {
             input: 'landing.js',
             output: 'landing/bundle'
+        },
+        'config': {
+            input: 'config/index.js',
+            output: 'config/bundle'
+        },
+        'popups/block': {
+            input: 'popups/block.js',
+            output: 'popups/block/bundle'
+        },
+        'popups/star': {
+            input: 'popups/star.js',
+            output: 'popups/star/bundle'
         }
     })
 ]

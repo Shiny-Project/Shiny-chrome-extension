@@ -88,7 +88,7 @@ export function removeStar(item) {
  */
 export function addBlock(item) {
     return new Promise(async (resolve, reject) => {
-        if (await isInList('block'), item) {
+        if (await isInList('block', item)) {
             resolve();
         }
         // 黑名单与特别关注名单互斥
@@ -110,7 +110,7 @@ export function addBlock(item) {
  */
 export function addStar(item) {
     return new Promise(async (resolve, reject) => {
-        if (await isInList('star'), item) {
+        if (await isInList('star', item)) {
             resolve();
         }
         // 黑名单与特别关注名单互斥

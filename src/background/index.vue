@@ -25,7 +25,6 @@
             }
         },
         async mounted() {
-            console.log(this);
             // 安装个提示
             // 更新或安装时的提示
             chrome.runtime.onInstalled.addListener((details) => {
@@ -65,6 +64,28 @@
             chrome.notifications.onClosed.addListener((id) => {
                 if (this.notificationData[id]) {
                     delete this.notificationData[id];
+                }
+            });
+
+            //chrome.windows
+
+            chrome.notifications.onButtonClicked.addListener((id, index) => {
+                if (index === 0) {
+                    chrome.windows.create({
+                        type: 'popup',
+                        url: '../popups/block/index.html#' + this.notificationData[id].spiderName,
+                        width: 400,
+                        height: 200
+                    })
+                } else if (index === 1) {
+                    chrome.windows.create({
+                        type: 'popup',
+                        url: '../popups/star/index.html#' + this.notificationData[id].spiderName,
+                        width: 400,
+                        height: 200
+                    })
+                } else {
+
                 }
             });
 

@@ -1,0 +1,97 @@
+<template>
+    <el-row>
+        <el-col :span="20" :offset="2">
+            <el-card>
+                <h2>设置</h2>
+                <h3>屏蔽列表管理</h3>
+                <el-table :data="blockList">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            property="name"
+                            label="Spider Name"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    type="text"
+                                    @click="handleRemoveBlock(scope.row.name)"
+                            >
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <h3>特别关注列表管理</h3>
+                <el-table :data="starList">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            property="name"
+                            label="Spider Name"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    type="text"
+                                    @click="handleRemoveStar(scope.row.name)"
+                            >
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+</template>
+<script>
+    import * as storage from '../utils/storage';
+
+    export default {
+        data() {
+            return {
+                blockList: [],
+                starList: []
+            }
+        },
+        methods: {
+            async handleRemoveBlock(name) {
+                await storage.removeBlock(name);
+                const index = this.blockList.findIndex(i => i.name === name);
+                this.blockList = [
+                    ...this.blockList.slice(0, index),
+                    ...this.blockList.slice(index + 1)
+                ]
+            },
+            async handleRemoveStar(name) {
+                await storage.removeStar(name);
+                const index = this.starList.findIndex(i => i.name === name);
+                this.starList = [
+                    ...this.starList.slice(0, index),
+                    ...this.starList.slice(index + 1)
+                ]
+            }
+        },
+        async mounted() {
+            const blockList = await storage.getList('block');
+            const starList = await storage.getList('star');
+            this.blockList = blockList.map(i => {
+                return {
+                    name: i
+                };
+            });
+            this.starList = starList.map(i => {
+                return {
+                    name: i
+                }
+            })
+        }
+    }
+</script>
