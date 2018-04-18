@@ -77,7 +77,7 @@ const generateConfig = (input) => {
             }
         },
     }
-}
+};
 
 module.exports = [
     generateConfig({
@@ -104,6 +104,14 @@ module.exports = [
         'popups/star': {
             input: 'popups/star.js',
             output: 'popups/star/bundle'
+        },
+        'account/login': {
+            input: 'account/login.js',
+            output: 'account/login/bundle'
+        },
+        'subscription': {
+            input: 'subscription/index.js',
+            output: 'subscription/bundle'
         }
     })
 ]

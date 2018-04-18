@@ -8,6 +8,7 @@
             <div>
                 <el-button type="text" @click="openConfigPage">设置页</el-button>
                 <el-button type="text" @click="openRecentPage" class="hidden-lg-only">新窗口打开本页</el-button>
+                <el-button type="text" @click="openSubscriptionPage">管理订阅</el-button>
             </div>
             <div v-loading="loading" style="min-height: 300px">
                 <template v-for="event in events">
@@ -81,6 +82,11 @@
             openRecentPage() {
                 chrome.tabs.create({
                     url: './recent/index.html'
+                })
+            },
+            openSubscriptionPage() {
+                chrome.tabs.create({
+                    url: './subscription/index.html'
                 })
             },
             /**

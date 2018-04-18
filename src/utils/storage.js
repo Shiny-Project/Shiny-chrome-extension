@@ -125,3 +125,11 @@ export function addStar(item) {
         resolve();
     });
 }
+
+/**
+ * 获得用户token
+ * @returns {string | null}
+ */
+export function getToken() {
+    return localStorage.getItem('token');
+}
