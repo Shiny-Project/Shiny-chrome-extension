@@ -47,6 +47,17 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div>
+                    <el-form>
+                        <h2>其他设置(未实装)</h2>
+                        <el-form-item label="静音">
+                            <el-switch v-model="mute"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="静音时不屏蔽特别关注" v-if="mute">
+                            <el-switch v-model="exceptFavorite"></el-switch>
+                        </el-form-item>
+                    </el-form>
+                </div>
             </el-card>
         </el-col>
     </el-row>
@@ -58,7 +69,9 @@
         data() {
             return {
                 blockList: [],
-                starList: []
+                starList: [],
+                mute: false,
+                exceptFavorite: false
             }
         },
         methods: {

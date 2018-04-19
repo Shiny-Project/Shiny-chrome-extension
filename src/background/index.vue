@@ -8,6 +8,7 @@
     import io from "socket.io-client";
     import * as storage from "../utils/storage";
     import {showNotification} from "../utils/notification";
+    import {getSubscription} from "../utils/suubscription";
 
     export default {
         data() {
@@ -107,6 +108,13 @@
                     console.log(data);
                     return;
                 }
+
+                const subscription = await getSubscription();
+                if (!subscription.includes(item.spiderName)) {
+                    // 未订阅
+                    return ;
+                }
+
                 if (localStorage.mute === "true") {
                     // 免打扰
                     if (localStorage.exceptFavorite === "true") {

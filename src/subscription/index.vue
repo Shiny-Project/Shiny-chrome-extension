@@ -105,12 +105,15 @@
             }
         },
         async mounted() {
+            if (!localStorage.getItem('token')) {
+                // 未登录
+                location.href = '../account/login/index.html';
+            }
             this.reloadLocalSubscription();
             this.loading = true;
             try {
                 const spiderListResponse = await axios.get('https://shiny.kotori.moe/Spider/list');
                 this.spiderList = spiderListResponse.data.data;
-                console.log(this.spiderList);
             } catch (e) {
                 this.$message({
                     type: 'error',
