@@ -116,7 +116,7 @@
                 }
 
                 const subscription = await getSubscription();
-                if (!subscription.includes(item.spiderName)) {
+                if (!subscription.includes(event.spiderName)) {
                     // 未订阅
                     return ;
                 }
