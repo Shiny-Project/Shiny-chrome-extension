@@ -51,10 +51,10 @@
                     <el-form>
                         <h2>其他设置(未实装)</h2>
                         <el-form-item label="静音">
-                            <el-switch v-model="mute"></el-switch>
+                            <el-switch v-model="mute" @change="changeMute"></el-switch>
                         </el-form-item>
                         <el-form-item label="静音时不屏蔽特别关注" v-if="mute">
-                            <el-switch v-model="exceptFavorite"></el-switch>
+                            <el-switch v-model="exceptFavorite" @change="changeExceptFavorite"></el-switch>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -90,6 +90,12 @@
                     ...this.starList.slice(0, index),
                     ...this.starList.slice(index + 1)
                 ]
+            },
+            changeMute() {
+                localStorage.setItem('mute', this.mute.toString());
+            },
+            changeExceptFavorite() {
+                localStorage.setItem('exceptFavorite', this.exceptFavorite.toString())
             }
         },
         async mounted() {

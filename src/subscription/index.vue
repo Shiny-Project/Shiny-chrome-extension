@@ -80,25 +80,25 @@
             },
             async handleSubscriptionClick(spiderName) {
                 this.loading = true;
-                if (this.isInLocalSubscription(spiderName)) {
-                    try {
+                try {
+                    if (this.isInLocalSubscription(spiderName)) {
                         await unsubscribe(spiderName);
                         this.reloadLocalSubscription();
-                    } catch (e) {
-                        this.$message({
-                            type: 'error',
-                            message: e.response.data.error.info
-                        })
-                    }
-                } else {
-                    try {
+                    } else {
                         await subscribe(spiderName);
                         this.reloadLocalSubscription();
-                    } catch (e) {
-                        this.$message({
-                            type: 'error',
-                            message: e.response.data.error.info
-                        })
+                    }
+                } catch (e) {
+                    this.$message({
+                        type: 'error',
+                        message: e.response.data.error.info
+                    });
+                    if (e.response.data.error.code === "user_not_found") {
+                        // 未登陆
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('uid');
+                        localStorage.removeItem('subscription');
+                        location.href = '../account/login/index.html';
                     }
                 }
                 this.loading = false;
@@ -118,7 +118,7 @@
                 this.$message({
                     type: 'error',
                     message: e.response.data.error.info
-                })
+                });
             }
             this.loading = false;
         }

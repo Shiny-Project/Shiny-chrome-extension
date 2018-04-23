@@ -3,12 +3,15 @@
         <el-col :span="8" :offset="8">
             <el-card>
                 <h2>登录</h2>
+                <el-alert title="首次安装，请登录设置订阅" v-if="mode === 'install'"></el-alert>
+                    <el-alert title="当前订阅列表为空，真的不要订阅一下吗" v-if="mode === 'update'">
+                </el-alert>
                 <el-form v-loading="loading">
                     <el-form-item label="Email">
                         <el-input type="email" v-model="form.email"></el-input>
                     </el-form-item>
                     <el-form-item label="Password">
-                        <el-input type="password" v-model="form.password"></el-input>
+                        <el-input type="password" v-model="form.password" @keyup.enter.native="handleSubmit"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button @click="handleSubmit">登录</el-button>
@@ -23,6 +26,7 @@
     import axios from 'axios';
     import { showNotification } from "../utils/notification";
     import {getSubscription} from "../utils/suubscription";
+    import {getToken} from "../utils/storage";
 
     export default {
         data() {
@@ -33,6 +37,11 @@
                     password: ''
                 }
             }
+        },
+        computed: {
+          mode() {
+              return location.hash.slice(1);
+          }
         },
         methods: {
             async handleSubmit() {
@@ -67,7 +76,7 @@
                             cover: "../../../assets/image/kotori.jpg"
                         }
                     });
-                    //window.close();
+                    window.close();
                 } catch (e) {
                     this.$message({
                         type: 'error',
@@ -78,6 +87,13 @@
             },
             jumpToRegister() {
                 location.href = '../register/index.html'
+            }
+        },
+        mounted() {
+            if (this.mode === 'update') {
+                if (getToken()) {
+                    location.href = './subscription/index.html';
+                }
             }
         }
     }

@@ -39,6 +39,9 @@
                             link: "https://shiny.kotori.moe"
                         }
                     });
+                    chrome.tabs.create({
+                        url: '../account/login/index.html#install',
+                    });
                 } else if (details.reason === "update") {
                     let thisVersion = chrome.runtime.getManifest().version;
                     this.showNotification({
@@ -50,6 +53,11 @@
                             link: "https://shiny.kotori.moe"
                         }
                     });
+                    if (getSubscription().length === 0) {
+                        chrome.tabs.create({
+                            url: '../account/login/index.html#update',
+                        });
+                    }
                 }
             });
 
@@ -67,8 +75,6 @@
                     delete this.notificationData[id];
                 }
             });
-
-            //chrome.windows
 
             chrome.notifications.onButtonClicked.addListener((id, index) => {
                 if (index === 0) {
