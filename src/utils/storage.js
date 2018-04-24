@@ -42,8 +42,6 @@ export function isInList(listName, item) {
     })
 }
 
-
-
 /**
  * 移除屏蔽
  * @param {*} item 
@@ -121,6 +119,47 @@ export function addStar(item) {
         await setList('star', [
             ...blockList,
             item
+        ]);
+        resolve();
+    });
+}
+
+/**
+ * 屏蔽频道
+ * @param spiderName
+ * @param channelName
+ * @returns {Promise<any>}
+ */
+export function addBlockChannel(spiderName, channelName) {
+    return new Promise(async (resolve, reject) => {
+        if (await isInList('block_channel', `${spiderName}:${channelName}`)) {
+            resolve();
+        }
+        const blockChannelList = await getList('block_channel');
+        await setList('block_channel', [
+            ...blockChannelList,
+            `${spiderName}:${channelName}`
+        ]);
+        resolve();
+    })
+}
+
+/**
+ * 移除屏蔽频道
+ * @param spiderName
+ * @param channelName
+ * @returns {Promise<any>}
+ */
+export function removeBlockChannel(spiderName, channelName) {
+    return new Promise(async (resolve, reject) => {
+        const blockChannelList = await getList('block_channel');
+        const index = blockChannelList.findIndex(i => i === `${spiderName}:${channelName}`);
+        if (index < 0) {
+            reject("黑名单中不存在该项目");
+        }
+        await setList('block_channel', [
+            ...blockChannelList.slice(0, index),
+            ...blockChannelList.slice(index + 1)
         ]);
         resolve();
     });

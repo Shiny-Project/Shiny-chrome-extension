@@ -21,7 +21,8 @@
                 const notificationId = await showNotification(event);
                 this.notificationData[notificationId] = {
                     url: event.data.link,
-                    spiderName: event.spiderName
+                    spiderName: event.spiderName,
+                    channel: event.channel
                 };
             }
         },
@@ -53,7 +54,7 @@
                             link: "https://shiny.kotori.moe"
                         }
                     });
-                    if (getSubscription().length === 0) {
+                    if (!localStorage.getItem('subscription') || localStorage.getItem('subscription') === '[]') {
                         chrome.tabs.create({
                             url: '../account/login/index.html#update',
                         });
@@ -80,14 +81,16 @@
                 if (index === 0) {
                     chrome.windows.create({
                         type: 'popup',
-                        url: '../popups/block/index.html#' + this.notificationData[id].spiderName,
+                        url: '../popups/block/index.html#' + this.notificationData[id].spiderName +
+                        (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ''),
                         width: 400,
                         height: 200
                     })
                 } else if (index === 1) {
                     chrome.windows.create({
                         type: 'popup',
-                        url: '../popups/star/index.html#' + this.notificationData[id].spiderName,
+                        url: '../popups/star/index.html#' + this.notificationData[id].spiderName +
+                        (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ''),
                         width: 400,
                         height: 200
                     })

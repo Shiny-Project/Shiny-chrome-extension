@@ -25,6 +25,28 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <h3>屏蔽子频道管理</h3>
+                <el-table :data="blockChannelList">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            property="name"
+                            label="Spider:Channel"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    type="text"
+                                    @click="handleRemoveBlockChannel(scope.row.name)"
+                            >
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
                 <h3>特别关注列表管理</h3>
                 <el-table :data="starList">
                     <el-table-column
@@ -49,7 +71,7 @@
                 </el-table>
                 <div>
                     <el-form>
-                        <h2>其他设置(未实装)</h2>
+                        <h2>其他设置</h2>
                         <el-form-item label="静音">
                             <el-switch v-model="mute" @change="changeMute"></el-switch>
                         </el-form-item>
@@ -70,6 +92,7 @@
             return {
                 blockList: [],
                 starList: [],
+                blockChannelList: [],
                 mute: false,
                 exceptFavorite: false
             }
@@ -91,6 +114,15 @@
                     ...this.starList.slice(index + 1)
                 ]
             },
+            async handleRemoveBlockChannel(name) {
+              const [spiderName, channelName] = name.split(':');
+              await storage.removeBlockChannel(spiderName, channelName);
+              const index = this.blockChannelList.findIndex(i => i.name === `${spiderName}:${channelName}`);
+              this.blockChannelList = [
+                  ...this.blockChannelList.slice(0, index),
+                  ...this.blockChannelList.slice(index + 1)
+              ]
+            },
             changeMute() {
                 localStorage.setItem('mute', this.mute.toString());
             },
@@ -101,12 +133,18 @@
         async mounted() {
             const blockList = await storage.getList('block');
             const starList = await storage.getList('star');
+            const blockChannelList = await storage.getList('block_channel');
             this.blockList = blockList.map(i => {
                 return {
                     name: i
                 };
             });
             this.starList = starList.map(i => {
+                return {
+                    name: i
+                }
+            });
+            this.blockChannelList = blockChannelList.map(i => {
                 return {
                     name: i
                 }
