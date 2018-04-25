@@ -83,7 +83,7 @@
                         type: 'popup',
                         url: '../popups/block/index.html#' + this.notificationData[id].spiderName +
                         (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ''),
-                        width: 400,
+                        width: 500,
                         height: 200
                     })
                 } else if (index === 1) {
@@ -91,7 +91,7 @@
                         type: 'popup',
                         url: '../popups/star/index.html#' + this.notificationData[id].spiderName +
                         (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ''),
-                        width: 400,
+                        width: 500,
                         height: 200
                     })
                 } else {
@@ -140,6 +140,12 @@
                     if (await storage.isInList("block", event.spiderName)) {
                         // 来源被屏蔽
                         return;
+                    }
+                    if (event.channel) {
+                        if (await storage.isInList("block_channel", `${event.spiderName}:${event.channel}`)) {
+                            // 频道被屏蔽
+                            return;
+                        }
                     }
                     if (await storage.isInList("star", event.spiderName)) {
                         // 特别关注 总是发出提示音
