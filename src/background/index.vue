@@ -83,16 +83,16 @@
                         type: 'popup',
                         url: '../popups/block/index.html#' + this.notificationData[id].spiderName +
                         (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ''),
-                        width: 500,
-                        height: 200
+                        width: 600,
+                        height: 300
                     })
                 } else if (index === 1) {
                     chrome.windows.create({
                         type: 'popup',
                         url: '../popups/star/index.html#' + this.notificationData[id].spiderName +
                         (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ''),
-                        width: 500,
-                        height: 200
+                        width: 600,
+                        height: 300
                     })
                 } else {
 
