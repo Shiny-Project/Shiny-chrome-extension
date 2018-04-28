@@ -10,31 +10,32 @@
 </template>
 <style>
     body {
-        padding: 2rem;
+    padding: 2rem;
+    overflow: hidden;
     }
-    .function-button{
-        display: block;
+    .function-button {
+    display: block;
     }
 </style>
 <script>
-    import * as storage from '../utils/storage';
+    import * as storage from "../utils/storage";
     export default {
-        data() {
-            return {
-                name: ''
-            }
+    data() {
+        return {
+        name: ""
+        };
+    },
+    methods: {
+        async addStar() {
+        await storage.addStar(this.name);
+        window.close();
         },
-        methods: {
-            async addStar(){
-                await storage.addStar(this.name);
-                window.close();
-            },
-            cancel(){
-                window.close();
-            }
-        },
-        mounted(){
-            this.name = location.hash.slice(1);
+        cancel() {
+        window.close();
         }
+    },
+    mounted() {
+        this.name = location.hash.slice(1);
     }
+    };
 </script>

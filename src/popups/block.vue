@@ -14,6 +14,7 @@
 <style>
     body {
         padding: 2rem;
+        overflow: hidden;
     }
     .function-button{
         display: block;
