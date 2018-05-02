@@ -6,9 +6,16 @@ import axios from 'axios';
  * @returns {Promise<*>}
  */
 export async function getSubscription() {
-    const response = await axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`);
-    localStorage.setItem('subscription', JSON.stringify(response.data.data));
-    return response.data.data;
+    const lastGetSubscriptionTime = localStorage.getItem('lastGetSubscriptionTime');
+    if (lastGetSubscriptionTime && (parseInt(lastGetSubscriptionTime) - new Date().valueOf() < 1000 * 1800)) {
+        // get cache
+        return JSON.parse(localStorage.getItem('subscription'));
+    } else {
+        const response = await axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`);
+        localStorage.setItem('subscription', JSON.stringify(response.data.data));
+        localStorage.setItem('lastGetSubscriptionTime', new Date().valueOf().toString());
+        return response.data.data;
+    }
 }
 
 /**

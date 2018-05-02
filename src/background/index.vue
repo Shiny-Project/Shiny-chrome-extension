@@ -117,8 +117,13 @@
                     console.log(data);
                     return;
                 }
+                let subscription;
+                try {
+                    subscription = await getSubscription();
+                } catch (e) {
+                    console.log('获取订阅列表失败！');
+                }
 
-                const subscription = await getSubscription();
                 if (!subscription.includes(event.spiderName)) {
                     // 未订阅
                     return ;
