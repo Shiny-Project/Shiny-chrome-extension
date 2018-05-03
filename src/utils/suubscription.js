@@ -11,10 +11,12 @@ export async function getSubscription() {
         // get cache
         return JSON.parse(localStorage.getItem('subscription'));
     } else {
-        const response = await axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`);
-        localStorage.setItem('subscription', JSON.stringify(response.data.data));
-        localStorage.setItem('lastGetSubscriptionTime', new Date().valueOf().toString());
-        return response.data.data;
+        // refresh
+        axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`).then(response => {
+            localStorage.setItem('subscription', JSON.stringify(response.data.data));
+            localStorage.setItem('lastGetSubscriptionTime', new Date().valueOf().toString());
+        });
+        return JSON.parse(localStorage.getItem('subscription'));
     }
 }
 
