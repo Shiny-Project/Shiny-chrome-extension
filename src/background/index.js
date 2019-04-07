@@ -7,4 +7,4 @@ Vue.use(Element);
 new Vue({
     el: '#app',
     render: h => h(index)
-})
+});

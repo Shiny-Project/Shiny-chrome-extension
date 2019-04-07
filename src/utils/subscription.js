@@ -5,14 +5,14 @@ import axios from 'axios';
  * 获得订阅列表
  * @returns {Promise<*>}
  */
-export async function getSubscription() {
+export async function getSubscription(forceRefresh = false) {
     const lastGetSubscriptionTime = localStorage.getItem('lastGetSubscriptionTime');
-    if (lastGetSubscriptionTime && (parseInt(lastGetSubscriptionTime) - new Date().valueOf() < 1000 * 1800)) {
+    if ((lastGetSubscriptionTime && (parseInt(lastGetSubscriptionTime) - new Date().valueOf() < 1000 * 1800)) && !forceRefresh) {
         // get cache
         return JSON.parse(localStorage.getItem('subscription'));
     } else {
         // refresh
-        axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`).then(response => {
+        await axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`).then(response => {
             localStorage.setItem('subscription', JSON.stringify(response.data.data));
             localStorage.setItem('lastGetSubscriptionTime', new Date().valueOf().toString());
         });

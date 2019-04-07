@@ -8,7 +8,7 @@
     import io from "socket.io-client";
     import * as storage from "../utils/storage";
     import {showNotification} from "../utils/notification";
-    import {getSubscription} from "../utils/suubscription";
+    import {getSubscription} from "../utils/subscription";
 
     export default {
         data() {
@@ -38,7 +38,8 @@
                             title: "Shiny已安装~",
                             content: "现在您可以收到来自Shiny的推送通知。",
                             link: "https://shiny.kotori.moe"
-                        }
+                        },
+                        channel: '安装提示'
                     });
                     chrome.tabs.create({
                         url: '../account/login/index.html#install',
@@ -52,7 +53,8 @@
                             title: `Shiny已更新至${thisVersion}~`,
                             content: "现在您可以收到来自Shiny的推送通知。",
                             link: "https://shiny.kotori.moe"
-                        }
+                        },
+                        channel: '更新提示'
                     });
                     if (!localStorage.getItem('subscription') || localStorage.getItem('subscription') === '[]') {
                         chrome.tabs.create({

@@ -48,7 +48,7 @@
         mounted(){
             if (location.hash.includes(':')) {
                 this.name = location.hash.slice(1).split(':')[0];
-                this.channel = location.hash.slice(1).split(':')[1];
+                this.channel = decodeURI(location.hash.slice(1).split(':')[1]);
             } else {
                 this.name = location.hash.slice(1);
             }

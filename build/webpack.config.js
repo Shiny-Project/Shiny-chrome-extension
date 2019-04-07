@@ -108,6 +108,10 @@ module.exports = [
         'account/login': {
             input: 'account/login.js',
             output: 'account/login/bundle'
+        }, 
+        'account/register': {
+            input: 'account/register.js',
+            output: 'account/register/bundle'
         },
         'subscription': {
             input: 'subscription/index.js',

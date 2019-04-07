@@ -25,7 +25,7 @@
 <script>
     import axios from 'axios';
     import { showNotification } from "../utils/notification";
-    import {getSubscription} from "../utils/suubscription";
+    import {getSubscription} from "../utils/subscription";
     import {getToken} from "../utils/storage";
 
     export default {
@@ -63,7 +63,7 @@
                     const subscription = await getSubscription();
                     if (subscription.length === 0) {
                         chrome.tabs.create({
-                            url: './subscription/index.html'
+                            url: '../../../subscription/index.html'
                         })
                     }
                     showNotification({
@@ -92,7 +92,7 @@
         mounted() {
             if (this.mode === 'update') {
                 if (getToken()) {
-                    location.href = './subscription/index.html';
+                    location.href = '../../../subscription/index.html';
                 }
             }
         }

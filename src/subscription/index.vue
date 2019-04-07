@@ -15,7 +15,12 @@
                                 <div slot="header" class="clearfix">
                                     <h3 class="spider-title">{{ spider.name }}</h3>
                                     <span class="spider-detail">
-                                        每 {{ spider.info.expires }} 秒刷新
+                                        <template v-if="spider.path">
+                                              每 {{ spider.info.expires }} 秒刷新
+                                        </template>
+                                        <template v-else>
+                                              外部爬虫
+                                        </template>
                                     </span>
                                     <el-button
                                             style="float: right; padding: 3px 0"
@@ -51,7 +56,7 @@
     }
 </style>
 <script>
-    import {getSubscription, subscribe, unsubscribe} from "../utils/suubscription";
+    import {getSubscription, subscribe, unsubscribe} from "../utils/subscription";
     import axios from 'axios';
 
     export default {
@@ -109,9 +114,10 @@
                 // 未登录
                 location.href = '../account/login/index.html';
             }
-            this.reloadLocalSubscription();
             this.loading = true;
             try {
+                await getSubscription(true);
+                this.reloadLocalSubscription();
                 const spiderListResponse = await axios.get('https://shiny.kotori.moe/Spider/list');
                 this.spiderList = spiderListResponse.data.data;
             } catch (e) {
