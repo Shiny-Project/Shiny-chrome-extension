@@ -48,6 +48,10 @@ const generateConfig = (input) => {
                         from: path.resolve(__dirname, "../assets/"),
                         to: path.resolve(__dirname, "../dist/assets"),
                     },
+                    {
+                        from: path.resolve(__dirname, "../manifest.json"),
+                        to: path.resolve(__dirname, "../dist/manifest.json"),
+                    },
                 ],
             }),
             new MiniCssExtractPlugin(),
