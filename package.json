@@ -19,17 +19,16 @@
   },
   "homepage": "https://github.com/Last-Order/Shiny-chrome-extension#readme",
   "devDependencies": {
-    "@babel/core": "^7.13.14",
-    "@babel/preset-env": "^7.13.12",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^8.1.0",
     "css-loader": "^3.2.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.4.0",
-    "path": "^0.12.7",
     "style-loader": "^0.20.3",
-    "url-loader": "^1.1.2",
+    "url-loader": "^4.1.1",
     "vue-loader": "^14.2.4",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^5.30.0",
@@ -38,6 +37,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "core-js": "^3.13.1",
     "element-ui": "^2.11.1",
     "socket.io-client": "^4.0.1",
     "vue": "^2.6.10"

@@ -70,7 +70,14 @@ const generateConfig = (input) => {
                         loader: "babel-loader",
                         options: {
                             presets: [
-                                ["@babel/preset-env", { targets: "defaults" }],
+                                [
+                                    "@babel/preset-env",
+                                    {
+                                        targets: "> 0.25%, not dead",
+                                        useBuiltIns: "usage",
+                                        corejs: "3.13"
+                                    },
+                                ],
                             ],
                         },
                     },
