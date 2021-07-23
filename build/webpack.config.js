@@ -12,7 +12,7 @@ const generateHTMLPluginConf = (input) => {
             new HtmlWebpackPlugin({
                 filename: path.resolve(__dirname, `../dist/${file}/index.html`),
                 template: path.resolve(__dirname, "../src/index.html"),
-                chunks: ["vendors", input[file]["output"]],
+                chunks: ["vendors", input[file]["output"]]
             })
         );
     }
@@ -22,10 +22,7 @@ const generateHTMLPluginConf = (input) => {
 const generateEntries = (input) => {
     const result = {};
     for (const file of Object.keys(input)) {
-        result[input[file]["output"]] = path.resolve(
-            __dirname,
-            `../src/${input[file]["input"]}`
-        );
+        result[input[file]["output"]] = path.resolve(__dirname, `../src/${input[file]["input"]}`);
     }
     return result;
 };
@@ -35,33 +32,33 @@ const generateConfig = (input) => {
         mode: "production",
         entry: generateEntries(input),
         resolve: {
-            extensions: [".js", ".vue"],
+            extensions: [".js", ".vue"]
         },
         plugins: [
             new WriteFilePlugin(),
             new CleanWebpackPlugin({
-                verbose: true,
+                verbose: true
             }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
                         from: path.resolve(__dirname, "../assets/"),
-                        to: path.resolve(__dirname, "../dist/assets"),
+                        to: path.resolve(__dirname, "../dist/assets")
                     },
                     {
                         from: path.resolve(__dirname, "../manifest.json"),
-                        to: path.resolve(__dirname, "../dist/manifest.json"),
-                    },
-                ],
+                        to: path.resolve(__dirname, "../dist/manifest.json")
+                    }
+                ]
             }),
             new MiniCssExtractPlugin(),
-            ...generateHTMLPluginConf(input),
+            ...generateHTMLPluginConf(input)
         ],
         module: {
             rules: [
                 {
                     test: /\.vue$/,
-                    loader: "vue-loader",
+                    loader: "vue-loader"
                 },
                 {
                     test: /\.m?js$/,
@@ -75,26 +72,26 @@ const generateConfig = (input) => {
                                     {
                                         targets: "> 0.25%, not dead",
                                         useBuiltIns: "usage",
-                                        corejs: "3.13",
-                                    },
-                                ],
-                            ],
-                        },
-                    },
+                                        corejs: "3.13"
+                                    }
+                                ]
+                            ]
+                        }
+                    }
                 },
                 {
                     test: /\.css$/,
-                    use: [MiniCssExtractPlugin.loader, "css-loader"],
+                    use: [MiniCssExtractPlugin.loader, "css-loader"]
                 },
                 {
                     test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                    loader: "url-loader",
-                },
-            ],
+                    loader: "url-loader"
+                }
+            ]
         },
         output: {
             filename: "[name].js",
-            path: path.resolve(__dirname, `../dist/`),
+            path: path.resolve(__dirname, `../dist/`)
         },
         optimization: {
             splitChunks: {
@@ -102,12 +99,18 @@ const generateConfig = (input) => {
                     commons: {
                         test: /[\\/]node_modules[\\/]/,
                         name: "vendors",
-                        chunks: "all",
-                    },
+                        chunks: "all"
+                    }
                 },
-                name: false,
-            },
+                name: false
+            }
         },
+        cache: {
+            type: 'filesystem',
+            buildDependencies: {
+                config: [__filename]
+            }
+        }
     };
 };
 
@@ -115,39 +118,39 @@ module.exports = [
     generateConfig({
         background: {
             input: "background/index.js",
-            output: "background/bundle",
+            output: "background/bundle"
         },
         recent: {
             input: "recent/index.js",
-            output: "recent/bundle",
+            output: "recent/bundle"
         },
         landing: {
             input: "landing.js",
-            output: "landing/bundle",
+            output: "landing/bundle"
         },
         config: {
             input: "config/index.js",
-            output: "config/bundle",
+            output: "config/bundle"
         },
         "popups/block": {
             input: "popups/block.js",
-            output: "popups/block/bundle",
+            output: "popups/block/bundle"
         },
         "popups/star": {
             input: "popups/star.js",
-            output: "popups/star/bundle",
+            output: "popups/star/bundle"
         },
         "account/login": {
             input: "account/login.js",
-            output: "account/login/bundle",
+            output: "account/login/bundle"
         },
         "account/register": {
             input: "account/register.js",
-            output: "account/register/bundle",
+            output: "account/register/bundle"
         },
         subscription: {
             input: "subscription/index.js",
-            output: "subscription/bundle",
-        },
-    }),
+            output: "subscription/bundle"
+        }
+    })
 ];
