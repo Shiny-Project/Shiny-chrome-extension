@@ -1,22 +1,26 @@
-import * as storage from './storage';
-import axios from 'axios';
+import * as storage from "./storage";
+import axios from "axios";
 
 /**
  * 获得订阅列表
  * @returns {Promise<*>}
  */
 export async function getSubscription(forceRefresh = false) {
-    const lastGetSubscriptionTime = localStorage.getItem('lastGetSubscriptionTime');
-    if ((lastGetSubscriptionTime && (parseInt(lastGetSubscriptionTime) - new Date().valueOf() < 1000 * 1800)) && !forceRefresh) {
+    const lastGetSubscriptionTime = localStorage.getItem("lastGetSubscriptionTime");
+    if (
+        lastGetSubscriptionTime &&
+        parseInt(lastGetSubscriptionTime) - new Date().valueOf() < 1000 * 1800 &&
+        !forceRefresh
+    ) {
         // get cache
-        return JSON.parse(localStorage.getItem('subscription'));
+        return JSON.parse(localStorage.getItem("subscription"));
     } else {
         // refresh
-        await axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`).then(response => {
-            localStorage.setItem('subscription', JSON.stringify(response.data.data));
-            localStorage.setItem('lastGetSubscriptionTime', new Date().valueOf().toString());
+        await axios.get(`https://shiny.kotori.moe/User/subscription?token=${storage.getToken()}`).then((response) => {
+            localStorage.setItem("subscription", JSON.stringify(response.data.data));
+            localStorage.setItem("lastGetSubscriptionTime", new Date().valueOf().toString());
         });
-        return JSON.parse(localStorage.getItem('subscription'));
+        return JSON.parse(localStorage.getItem("subscription"));
     }
 }
 
@@ -26,11 +30,11 @@ export async function getSubscription(forceRefresh = false) {
  * @returns {Promise<*>}
  */
 export async function subscribe(spiderName) {
-    const response = await axios.post('https://shiny.kotori.moe/User/subscribe', {
+    const response = await axios.post("https://shiny.kotori.moe/User/subscribe", {
         token: storage.getToken(),
         spiderName
     });
-    localStorage.setItem('subscription', JSON.stringify(response.data.data));
+    localStorage.setItem("subscription", JSON.stringify(response.data.data));
     return response.data.data;
 }
 
@@ -40,10 +44,10 @@ export async function subscribe(spiderName) {
  * @returns {Promise<*>}
  */
 export async function unsubscribe(spiderName) {
-    const response = await axios.post('https://shiny.kotori.moe/User/unsubscribe', {
+    const response = await axios.post("https://shiny.kotori.moe/User/unsubscribe", {
         token: storage.getToken(),
         spiderName
     });
-    localStorage.setItem('subscription', JSON.stringify(response.data.data));
+    localStorage.setItem("subscription", JSON.stringify(response.data.data));
     return response.data.data;
 }

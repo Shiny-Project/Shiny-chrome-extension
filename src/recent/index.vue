@@ -16,11 +16,10 @@
                         <div slot="header" class="clearfix">
                             <a :href="event.data.link" target="_blank" class="event-title">{{ event.data.title }}</a>
                             <span class="event-detail">
-                            {{ event.createdAt }} / Level.{{ event.level }} / {{ event.publisher }}
-                        </span>
+                                {{ event.createdAt }} / Level.{{ event.level }} / {{ event.publisher }}
+                            </span>
                         </div>
-                        <div v-html="event.data.content.replace(/\n/ig, '<br>')">
-                        </div>
+                        <div v-html="event.data.content.replace(/\n/gi, '<br>')"></div>
                     </el-card>
                 </template>
             </div>
@@ -31,85 +30,85 @@
     </el-row>
 </template>
 <style>
-    body {
-        overflow-x: hidden;
-    }
+body {
+    overflow-x: hidden;
+}
 
-    .events-container {
-        min-height: 300px;
-        min-width: 600px;
-    }
+.events-container {
+    min-height: 300px;
+    min-width: 600px;
+}
 
-    .event {
-        margin: 1rem 0;
-    }
+.event {
+    margin: 1rem 0;
+}
 
-    .event-title {
-        display: block;
-        font-size: larger;
-        text-decoration: none;
-        color: #209fff;
-    }
+.event-title {
+    display: block;
+    font-size: larger;
+    text-decoration: none;
+    color: #209fff;
+}
 
-    .event-title:hover {
-        color: #22c0ff;
-    }
+.event-title:hover {
+    color: #22c0ff;
+}
 
-    .event-detail {
-        color: #aaa;
-    }
+.event-detail {
+    color: #aaa;
+}
 
-    .grid-content {
-        min-height: 1px;
-    }
+.grid-content {
+    min-height: 1px;
+}
 </style>
 <script>
-    import axios from 'axios';
+import axios from "axios";
 
-    export default {
-        data() {
-            return {
-                events: [],
-                loading: false
-            }
+export default {
+    data() {
+        return {
+            events: [],
+            loading: false
+        };
+    },
+    methods: {
+        openConfigPage() {
+            chrome.tabs.create({
+                url: "./config/index.html"
+            });
         },
-        methods: {
-            openConfigPage() {
-                chrome.tabs.create({
-                    url: './config/index.html'
-                })
-            },
-            openRecentPage() {
-                chrome.tabs.create({
-                    url: './recent/index.html'
-                })
-            },
-            openSubscriptionPage() {
-                chrome.tabs.create({
-                    url: './subscription/index.html'
-                })
-            },
-            /**
-             * 获取最近页面
-             * @param page
-             * @returns {Promise<any>}
-             */
-            fetchRecentEvents(page = 1) {
-                return new Promise(async (resolve, reject) => {
-                    this.loading = true;
-                    try {
-                        const response = await axios.get(`https://shiny.kotori.moe/Data/recent?page=${page}`);
-                        resolve(response.data.data);
-                    } catch (e) {
-                        reject(e);
-                    }
-                    this.loading = false;
-                })
-            }
+        openRecentPage() {
+            chrome.tabs.create({
+                url: "./recent/index.html"
+            });
         },
-        async mounted() {
-            const result = await this.fetchRecentEvents();
-            this.events = this.events.concat(result.events);
+        openSubscriptionPage() {
+            chrome.tabs.create({
+                url: "./subscription/index.html"
+            });
+        },
+        /**
+         * 获取最近页面
+         * @param page
+         * @returns {Promise<any>}
+         */
+        fetchRecentEvents(page = 1) {
+            return new Promise(async (resolve, reject) => {
+                this.loading = true;
+                try {
+                    const response = await axios.get(`https://shiny.kotori.moe/Data/recent?page=${page}`);
+                    resolve(response.data.data);
+                } catch (e) {
+                    reject(e);
+                }
+                this.loading = false;
+            });
         }
+    },
+    async mounted() {
+        const result = await this.fetchRecentEvents();
+        this.events = this.events.concat(result.events);
     }
+};
 </script>

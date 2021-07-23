@@ -11,7 +11,7 @@ import { getSubscription } from "../utils/subscription";
 export default {
     data() {
         return {
-            notificationData: {},
+            notificationData: {}
         };
     },
     methods: {
@@ -20,9 +20,9 @@ export default {
             this.notificationData[notificationId] = {
                 url: event.data.link,
                 spiderName: event.spiderName,
-                channel: event.channel,
+                channel: event.channel
             };
-        },
+        }
     },
     async mounted() {
         // 安装个提示
@@ -35,12 +35,12 @@ export default {
                     data: {
                         title: "Shiny已安装~",
                         content: "现在您可以收到来自Shiny的推送通知。",
-                        link: "https://shiny.kotori.moe",
+                        link: "https://shiny.kotori.moe"
                     },
-                    channel: "安装提示",
+                    channel: "安装提示"
                 });
                 chrome.tabs.create({
-                    url: "../account/login/index.html#install",
+                    url: "../account/login/index.html#install"
                 });
             } else if (details.reason === "update") {
                 let thisVersion = chrome.runtime.getManifest().version;
@@ -50,16 +50,13 @@ export default {
                     data: {
                         title: `Shiny已更新至${thisVersion}~`,
                         content: "现在您可以收到来自Shiny的推送通知。",
-                        link: "https://shiny.kotori.moe",
+                        link: "https://shiny.kotori.moe"
                     },
-                    channel: "更新提示",
+                    channel: "更新提示"
                 });
-                if (
-                    !localStorage.getItem("subscription") ||
-                    localStorage.getItem("subscription") === "[]"
-                ) {
+                if (!localStorage.getItem("subscription") || localStorage.getItem("subscription") === "[]") {
                     chrome.tabs.create({
-                        url: "../account/login/index.html#update",
+                        url: "../account/login/index.html#update"
                     });
                 }
             }
@@ -69,7 +66,7 @@ export default {
         chrome.notifications.onClicked.addListener((id) => {
             if (this.notificationData[id]) {
                 chrome.tabs.create({
-                    url: this.notificationData[id].url,
+                    url: this.notificationData[id].url
                 });
             }
         });
@@ -87,11 +84,9 @@ export default {
                     url:
                         "../popups/block/index.html#" +
                         this.notificationData[id].spiderName +
-                        (this.notificationData[id].channel
-                            ? `:${this.notificationData[id].channel}`
-                            : ""),
+                        (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ""),
                     width: 600,
-                    height: 300,
+                    height: 300
                 });
             } else if (index === 1) {
                 chrome.windows.create({
@@ -99,11 +94,9 @@ export default {
                     url:
                         "../popups/star/index.html#" +
                         this.notificationData[id].spiderName +
-                        (this.notificationData[id].channel
-                            ? `:${this.notificationData[id].channel}`
-                            : ""),
+                        (this.notificationData[id].channel ? `:${this.notificationData[id].channel}` : ""),
                     width: 600,
-                    height: 300,
+                    height: 300
                 });
             } else {
             }
@@ -131,7 +124,7 @@ export default {
                 // 事件到达打点
                 try {
                     axios.post("https://shiny.kotori.moe/Data/ack", {
-                        eventId: event.eventId,
+                        eventId: event.eventId
                     });
                 } catch (e) {
                     console.log(e);
@@ -168,12 +161,7 @@ export default {
                     return;
                 }
                 if (event.channel) {
-                    if (
-                        await storage.isInList(
-                            "block_channel",
-                            `${event.spiderName}:${event.channel}`
-                        )
-                    ) {
+                    if (await storage.isInList("block_channel", `${event.spiderName}:${event.channel}`)) {
                         // 频道被屏蔽
                         return;
                     }
@@ -202,6 +190,6 @@ export default {
                 }
             }
         });
-    },
+    }
 };
 </script>

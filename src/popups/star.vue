@@ -9,33 +9,33 @@
     </div>
 </template>
 <style>
-    body {
+body {
     padding: 2rem;
     overflow: hidden;
-    }
-    .function-button {
+}
+.function-button {
     display: block;
-    }
+}
 </style>
 <script>
-    import * as storage from "../utils/storage";
-    export default {
+import * as storage from "../utils/storage";
+export default {
     data() {
         return {
-        name: ""
+            name: ""
         };
     },
     methods: {
         async addStar() {
-        await storage.addStar(this.name);
-        window.close();
+            await storage.addStar(this.name);
+            window.close();
         },
         cancel() {
-        window.close();
+            window.close();
         }
     },
     mounted() {
         this.name = location.hash.slice(1);
     }
-    };
+};
 </script>
