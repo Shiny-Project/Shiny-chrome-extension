@@ -75,7 +75,7 @@ const generateConfig = (input) => {
                                     {
                                         targets: "> 0.25%, not dead",
                                         useBuiltIns: "usage",
-                                        corejs: "3.13"
+                                        corejs: "3.13",
                                     },
                                 ],
                             ],
