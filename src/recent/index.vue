@@ -12,12 +12,15 @@
             </div>
             <div v-loading="loading" style="min-height: 300px">
                 <template v-for="event in events">
-                    <el-card class="event">
-                        <div slot="header" class="clearfix">
+                    <el-card class="event" :key="event.id">
+                        <div slot="header" class="event-header">
                             <a :href="event.data.link" target="_blank" class="event-title">{{ event.data.title }}</a>
-                            <span class="event-detail">
+                            <div class="event-detail">
                                 {{ event.createdAt }} / Level.{{ event.level }} / {{ event.publisher }}
-                            </span>
+                            </div>
+                            <el-button type="text" class="event-detail-button" @click="goEventDetail(event.id)">
+                                事件详情
+                            </el-button>
                         </div>
                         <div v-html="event.data.content.replace(/\n/gi, '<br>')"></div>
                     </el-card>
@@ -41,6 +44,17 @@ body {
 
 .event {
     margin: 1rem 0;
+}
+
+.event-header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-detail-button {
+    position: absolute;
+    right: 0;
 }
 
 .event-title {
@@ -104,6 +118,9 @@ export default {
                 }
                 this.loading = false;
             });
+        },
+        goEventDetail(eventId) {
+            window.open(`https://console.kotori.moe/#/dashboard/event/${eventId}`);
         }
     },
     async mounted() {
